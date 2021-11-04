@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2021 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* Board overlay for orange LED on the Stratus shield */
+ 
+ /{
+	leds {
+		compatible = "gpio-leds";
+		orange_led: led_1 {
+			gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
+			label = "Orange LED";
+		};
+	};
+	
+	/* These aliases are provided for compatibility with samples */
+	aliases {
+		led1 = &orange_led;
+	};
+};
