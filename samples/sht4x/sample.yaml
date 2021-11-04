@@ -1,0 +1,14 @@
+#
+# Copyright (c) 2021 Leonard Pollak
+# Copyright (c) 2021 Conexio Technologies, Inc
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+sample:
+  name: SHT4X Sensor Sample
+tests:
+  sample.sensor.sgp40_sht4x:
+    build_only: true
+    platform_allow: conexio_stratus_ns
+    tags: sensors
