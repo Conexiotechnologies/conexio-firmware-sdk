@@ -1,0 +1,7 @@
+sample:
+  name: Measure battery voltage
+tests:
+  sample.boards.nrf.battery:
+    build_only: true
+    platform_whitelist: conexio_stratus_ns
+    tags: battery
