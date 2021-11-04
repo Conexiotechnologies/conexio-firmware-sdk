@@ -21,24 +21,10 @@ The commands can be initiated from a terminal or the `LTE Link Monitor`_, which 
 For more information on the AT commands, see the `AT Commands Reference Guide`_.
 
 
-
-Requirements
-************
-
-The sample supports the following development kit:
-
-.. table-from-rows:: /includes/sample_board_rows.txt
-   :header: heading
-   :rows: nrf9160dk_nrf9160ns
-
-.. include:: /includes/spm.txt
-
 Building and running
 ********************
 
-.. |sample path| replace:: :file:`samples/nrf9160/at_client`
-
-.. include:: /includes/build_and_run_nrf9160.txt
+   west build -b conexio_stratus_ns
 
 
 Testing
@@ -46,9 +32,8 @@ Testing
 
 After programming the sample to your development kit, test the sample by performing the following steps:
 
-1. Press the reset button on the nRF9160 DK to reboot the kit and start the AT Client sample.
-#. :ref:`Connect to the nRF9160 DK with LTE Link Monitor<lte_connect>`.
-
+1. Press the reset button on the Conexio Stratus to reboot the kit and start the AT Client sample.
+2. 
    .. note::
 
       Make sure that **Automatic requests** is enabled in LTE Link Monitor.
@@ -99,7 +84,7 @@ Sample output
 The following is a sample output of the command: :command:`AT%XMONITOR`
 
 .. code-block:: console
-
+Conexio StratusConexio Stratus
    AT%XMONITOR
    %XMONITOR: 5,"","","24201","76C1",7,20,"0102DA03",105,6400,53,24,"","11100000","11100000"
    OK
