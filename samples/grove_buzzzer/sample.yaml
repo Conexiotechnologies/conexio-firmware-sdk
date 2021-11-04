@@ -1,0 +1,8 @@
+sample:
+  name: Buzzer Sample
+tests:
+  sample.basic.buzzer:
+    tags: gpio
+    filter:
+    depends_on: gpio
+    harness: buzzer
