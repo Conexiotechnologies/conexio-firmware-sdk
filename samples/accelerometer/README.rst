@@ -40,7 +40,8 @@ Sample Output
 =============
 
 .. code-block:: console
-
+    
+    Conexio Stratus accelerometer sensor example
     Polling at 0.5 Hz
     #1 @ 12 ms: x -5.387328 , y 5.578368 , z -5.463744
     #2 @ 2017 ms: x -5.310912 , y 5.654784 , z -5.501952
