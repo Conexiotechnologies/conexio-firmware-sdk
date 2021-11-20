@@ -52,7 +52,7 @@ Each cloud backend has specific setup steps that must be executed before it can 
 
 .. note::
    The the Conexio Stratus does not come preprogrammed with the certificates required for a connection to `nRF Connect for Cloud`_.
-   Refer to the :ref:`nRF documentation` on how to download the nRF Connect for Cloud certificate. 
+   Refer to the `nRF documentation`_ on how to download the nRF Connect for Cloud certificate. 
    The device ID of Stratus is composed of str- and the 15-digit International Mobile (Station) Equipment Identity (IMEI) number.
    For example: str-123456789012345. The nRF Cloud prefix for Conexio Stratus is set in ``cloud_client/prj.conf``
 
