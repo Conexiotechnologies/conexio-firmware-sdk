@@ -25,11 +25,11 @@ This repository is still under development and we have many example applications
 | Seeedstudio groove buzzer            			 | ✅ |
 | BME280 environmental sensor                    | ✅ |
 | AT client                    					 | ✅ |
+| nRF cloud client     							 | ✅ |
+| Datacake cloud client  						 | ✅ |
 | Watchdog timer            					 | ⏳ |
 | TeraBee level sensing                    		 | ⏳ |
 | GPS                    						 | ⏳ |
-| nRF cloud client     							 | ⏳ |
-| Datacake cloud client  						 | ⏳ |
 | Golioth cloud client                         	 | ⏳ |
 | Memfault cloud client            				 | ⏳ |
 | Edge Impulse machine learning    				 | ⏳ |

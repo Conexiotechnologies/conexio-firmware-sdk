@@ -1,0 +1,8 @@
+sample:
+  name: mqtt to datacake sample
+tests:
+  samples.nrf9160.mqtt_simple:
+    build_only: true
+    build_on_all: false
+    platform_allow: conexio_stratus_ns
+    tags: ci_build
