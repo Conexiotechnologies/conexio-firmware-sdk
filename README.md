@@ -27,12 +27,12 @@ This repository is still under development and we have many example applications
 | AT client                    					 | ✅ |
 | nRF cloud client     							 | ✅ |
 | Datacake cloud client  						 | ✅ |
+| Edge Impulse machine learning    				 | ✅ |
 | Watchdog timer            					 | ⏳ |
 | TeraBee level sensing                    		 | ⏳ |
 | GPS                    						 | ⏳ |
 | Golioth cloud client                         	 | ⏳ |
 | Memfault cloud client            				 | ⏳ |
-| Edge Impulse machine learning    				 | ⏳ |
 | Golioth firmware over-the-air update  		 | ⏳ |
 | Cellular based location                        | ⏳ |
 | Asset tracking                         	     | ⏳ |
