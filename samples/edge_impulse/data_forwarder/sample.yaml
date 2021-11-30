@@ -1,0 +1,9 @@
+sample:
+  description: Sample showing Edge Impulse data forwarder usage
+  name: Edge Impulse data forwarder sample
+tests:
+  samples.ei_data_forwarder:
+    build_only: true
+    integration_platforms:
+      - conexio_stratus_ns
+    tags: ci_build

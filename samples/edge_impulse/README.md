@@ -1,6 +1,10 @@
 
 # Conexio Stratus to Edge Impulse
 
-This samples demonstrates how to streaming data from Conexio Stratus to Edge Impulse Studio. 
-In development. Coming soon...
+This samples demonstrates how to stream data from Conexio Stratus to the Edge Impulse Studio and deploy the machine learning model onto the device.
+
+
+### [📣 Find our walk-through tutorials here →](https://www.rajeevpiyare.com/posts/edge-impulse/)
+
+
 
