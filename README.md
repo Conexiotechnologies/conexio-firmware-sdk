@@ -28,15 +28,15 @@ This repository is still under development and we have many example applications
 | nRF cloud client     							 | ✅ |
 | Datacake cloud client  						 | ✅ |
 | Edge Impulse machine learning    				 | ✅ |
+| Golioth firmware over-the-air update  		 | ✅ |
+| Golioth cloud client                         	 | ✅ |
 | Watchdog timer            					 | ⏳ |
 | TeraBee level sensing                    		 | ⏳ |
 | GPS                    						 | ⏳ |
-| Golioth cloud client                         	 | ⏳ |
 | Memfault cloud client            				 | ⏳ |
-| Golioth firmware over-the-air update  		 | ⏳ |
 | Cellular based location                        | ⏳ |
 | Asset tracking                         	     | ⏳ |
-| Qubitro cloud client             				 | ❌ |
+| Qubitro cloud client             				 | ⏳ |
 
 
 - ✅ = Ready to use
