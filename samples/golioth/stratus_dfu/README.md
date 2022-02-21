@@ -1,6 +1,8 @@
 
 # Stratus Device Firmware Update (DFU) using Golioth Platform
 
+### [📣 Find our walk-through tutorial for this sample application → here](https://www.rajeevpiyare.com/posts/stratus-to-golioth/)
+
 ## Overview
 This sample applications demonstrates how to connect
 - Conexio Stratus device with Golioth and periodically send environmental data to Light DB stream. In this sample temperature and humidity measurements from the SHT4x sensor are sent to `/temp` and `humidity` Light DB stream path. 

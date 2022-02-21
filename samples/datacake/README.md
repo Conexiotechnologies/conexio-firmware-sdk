@@ -2,9 +2,12 @@
 # Connecting Stratus to Datacake via MQTT
 This MQTT sample demonstrates how to easily connect the Conexio Stratus device to the Datacake MQTT broker, send, and receive data.
 
+### [📣 Find our walk-through tutorial for this sample application → here](https://www.rajeevpiyare.com/posts/stratus-to-datacake/)
+
 ## Requirements
 
 The sample supports the Conexio Stratus development kit.
+
 
 ## Overview
 The sample connects to the Datacake MQTT broker and publishes the data it receives on the configured subscribe topic to the 

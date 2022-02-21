@@ -30,10 +30,10 @@ This repository is still under development and we have many example applications
 | Edge Impulse machine learning    				 | ✅ |
 | Golioth firmware over-the-air update  		 | ✅ |
 | Golioth cloud client                         	 | ✅ |
+| Memfault cloud client            				 | ✅ |
 | Watchdog timer            					 | ⏳ |
 | TeraBee level sensing                    		 | ⏳ |
 | GPS                    						 | ⏳ |
-| Memfault cloud client            				 | ⏳ |
 | Cellular based location                        | ⏳ |
 | Asset tracking                         	     | ⏳ |
 | Qubitro cloud client             				 | ⏳ |
@@ -46,7 +46,7 @@ This repository is still under development and we have many example applications
 
 ## Community
 
-Got Questions? Join the conversation in our [Discord channel](https://discord.gg/2CZJTrt6Z5).
+Got Questions? Post it on our [discussions forum](https://github.com/Conexiotechnologies/conexio-stratus-firmware/discussions) or join the conversation in our [Discord channel](https://discord.gg/2CZJTrt6Z5).
 
 ## Have an idea? Notice a bug?
 
