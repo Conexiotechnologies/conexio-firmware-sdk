@@ -1,15 +1,52 @@
 [![Twitter: conexiotech](https://img.shields.io/twitter/follow/conexiotech.svg?style=social)](https://twitter.com/conexiotech)
 
+<img src="Design/banner.png" style="margin-bottom:10px" />
 
-# Conexio Stratus Application Examples
 Here you will find all the Conexio Stratus application examples and associated files to get started with creating and building your first application.
 The current sample applications are compatible for nRF Connect SDK (NCS) v1.7.0. 
 
+🖱 Click on any of the projects below to go to the full walk-through tutorial or Hackster projects and learn how to build and execute them on your Stratus device.
+
+<table>    
+    <tr>
+        <td>
+            <img src="Design/nRFConnect.png" /><br/>
+            Getting Started with nRF Connect for Visual Studio Code <br/>
+            <a href="https://www.rajeevpiyare.com/posts/nrfconnect-vs-code/">Blog</a> | <a href="https://www.hackster.io/piyareraj/getting-started-with-nrf-connect-for-visual-studio-code-24c882">Hackster</a> | <a href="samples/led_blink/">Source Code</a>
+        </td>  
+        <td>
+            <img src="Design/getting_started.png" /><br/>
+            Up and Running with ZephyrRTOS on Conexio Stratus Platform <br/>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> | <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a> | <a href="samples/led_blink/">Source Code</a>
+        </td>        
+        <td>
+            <img src="Design/datacake.png"/><br/>
+            Connecting Conexio Stratus to Datacake Platform <br/>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> | <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> | <a href="samples/datacake/">Source Code</a>
+        </td>       
+    </tr>
+    <tr>
+        <td>
+            <img src="Design/edge_impulse.png"/><br/>
+            Machine Learning with Conexio Stratus and Edge Impulse <br/>
+            <a href="https://www.rajeevpiyare.com/posts/edge-impulse/">Blog</a> | <a href="https://www.hackster.io/piyareraj/machine-learning-with-conexio-stratus-and-edge-impulse-25ad20">Hackster</a> | <a href="samples/edge_impulse/">Source Code</a>
+        </td>        
+        <td>
+            <img src="Design/golioth.png"/><br/>
+            Connecting Conexio Stratus to Golioth <br/>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-golioth/">Blog</a> | <a href="https://www.hackster.io/piyareraj/connecting-conexio-stratus-to-golioth-platform-e15cd9">Hackster</a> | <a href="samples/golioth/">Source Code</a>
+        </td>
+        <td>
+            <img src="Design/edge_impulse.png"/><br/>
+            Device Debugging and Monitoring using Memfault <br/>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-memfault/">Blog</a> | <a href="https://www.hackster.io/piyareraj/remote-device-debugging-and-monitoring-using-memfault-093aee">Hackster</a> | <a href="samples/memfault/">Source Code</a>
+        </td>        
+    </tr>
+</table>
+
+
+
 ### [📚 Dive in to the docs here →] (coming soon!)
-
-
-### [📣 Find our walk-through tutorials here →](https://www.rajeevpiyare.com/posts/)
-
 
 ## Stratus Sample Applications Roadmap
 
