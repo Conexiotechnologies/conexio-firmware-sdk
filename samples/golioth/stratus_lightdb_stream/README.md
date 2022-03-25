@@ -49,15 +49,9 @@ uart:~$ *** Booting Zephyr OS build v2.6.99-ncs1-rc2  ***
 <inf> golioth_system: Initializing
 <dbg> golioth_lightdb_stream.main: Start Stratus <> Golioth Light DB sensor stream sample
 <inf> golioth_system: Starting connect
-<dbg> golioth_lightdb_stream.main: Sending temperature data 25.961318
+<dbg> golioth_lightdb_stream: temp: 26.164263; humidity: 29.002288
 <inf> golioth_system: Client connected!
-<dbg> golioth_lightdb_stream.main: Sending humidity data 17.426406
-<dbg> golioth_lightdb_stream.main: Sending temperature data 25.971999
-<dbg> golioth_lightdb_stream.main: Sending humidity data 17.373001
-<dbg> golioth_lightdb_stream.main: Sending temperature data 25.971999
-<dbg> golioth_lightdb_stream.main: Sending humidity data 17.241394
-<dbg> golioth_lightdb_stream.main: Sending temperature data 25.988021
-<dbg> golioth_lightdb_stream.main: Sending humidity data 17.262374
-<dbg> golioth_lightdb_stream.main: Sending temperature data 26.025406
-<dbg> golioth_lightdb_stream.main: Sending humidity data 17.300521
+<inf> golioth_lightdb_stream: temp: 26.140230; humidity: 28.893554
+<inf> golioth_lightdb_stream: temp: 26.161593; humidity: 28.840148
+<inf> golioth_lightdb_stream: temp: 26.180285; humidity: 28.811538
 ```

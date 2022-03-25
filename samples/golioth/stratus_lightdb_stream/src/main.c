@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 Golioth, Inc.
- * Copyright (c) 2021 Conexio Technologies, Inc
+ * Copyright (c) 2022 Conexio Technologies, Inc
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -38,17 +38,32 @@ static void fetch_sensor_data(const struct device *sensor)
 	sensor_channel_get(sensor, SENSOR_CHAN_HUMIDITY, &hum);
 }
 
+/*
+ * This function sends SHT4X data to lightdb stream path `/environment`.
+ */
+static void sensor_value_set(uint32_t tempDec, uint32_t tempFloat, uint32_t humDec, uint32_t humFloat)
+{
+	char sbuf[60];
+	int err;
+
+	snprintk(sbuf, sizeof(sbuf) - 1, "{\"temp\":%d.%06d,\"humidity\":%d.%06d}",
+		      tempDec, tempFloat, humDec, humFloat);
+
+	err = golioth_lightdb_set(client,
+				  GOLIOTH_LIGHTDB_STREAM_PATH("environment"),
+				  COAP_CONTENT_FORMAT_TEXT_PLAIN,
+				  sbuf, strlen(sbuf));
+	if (err) {
+		LOG_WRN("Failed to send sensor data: %d", err);
+	}
+}
+
 void main(void)
 {
-	char str_temperature[32];
-	char str_humidity[32];
-
-	LOG_DBG("Start Stratus <> Golioth Light DB sensor stream sample");
+	LOG_INF("Start Stratus <> Golioth Light DB sensor stream sample");
 
 	const struct device *sht = DEVICE_DT_GET_ANY(sensirion_sht4x);
 	
-	int err;
-
 	if (!device_is_ready(sht)) {
 		LOG_ERR("Device %s is not ready.\n", sht->name);
 		return;
@@ -61,36 +76,11 @@ void main(void)
 		/* Fetch environmental data from SHT4X sensor */
 		fetch_sensor_data(sht);
 
-		snprintk(str_temperature, sizeof(str_temperature), "%d.%06d", temp.val1, abs(temp.val2));
-		str_temperature[sizeof(str_temperature) - 1] = '\0';
+		LOG_INF("temp: %d.%06d; humidity: %d.%06d",
+			temp.val1, temp.val2, hum.val1, hum.val2);
+		
+		sensor_value_set(temp.val1, temp.val2, hum.val1, hum.val2);
 
-		LOG_DBG("Sending temperature data %s", log_strdup(str_temperature));
-
-		err = golioth_lightdb_set(client,
-					  GOLIOTH_LIGHTDB_STREAM_PATH("temp"),
-					  COAP_CONTENT_FORMAT_TEXT_PLAIN,
-					  str_temperature,
-					  strlen(str_temperature));
-		if (err) {
-			LOG_WRN("Failed to send temperature data: %d", err);
-		}
-
-        /* Let previous data transaction to complete */
-		k_sleep(K_SECONDS(1));
-
-		snprintk(str_humidity, sizeof(str_humidity), "%d.%06d", hum.val1, abs(hum.val2));
-		str_humidity[sizeof(str_humidity) - 1] = '\0';
-
-		LOG_DBG("Sending humidity data %s", log_strdup(str_humidity));
-
-		err = golioth_lightdb_set(client,
-					  GOLIOTH_LIGHTDB_STREAM_PATH("humidity"),
-					  COAP_CONTENT_FORMAT_TEXT_PLAIN,
-					  str_humidity,
-					  strlen(str_humidity));
-		if (err) {
-			LOG_WRN("Failed to send humidity data: %d", err);
-		}
         /* Sleep for X seconds before sampling again */
 		k_sleep(SLEEP_TIME_SEC);
 	}
