@@ -9,7 +9,7 @@ menu "Stratus MQTT to Datacake sample"
 
 config APP_VERSION
 	string "Application version"
-	default "v1.0.0"
+	default "v1.0.1"
 
 config APPLICATION_WORKQUEUE_STACK_SIZE
 	int "Application workqueue stack size"
@@ -119,7 +119,7 @@ if ENVIRONMENT_SENSORS
 
 config ENVIRONMENT_DATA_SEND_INTERVAL
 	int "Interval in seconds for sending environment data"
-	default 30
+	default 7200
 	help
 	  Interval between each sampling and sending of environment sensor data.
 	  The unit is seconds.
@@ -128,7 +128,7 @@ endif # ENVIRONMENT_SENSORS
 
 config CLOUD_MESSAGE_PUBLICATION_INTERVAL
 	int "Sets how often the custom message should be published to cloud, in seconds"
-	default 720
+	default 7200
 
 config WATCHDOG_TIMEOUT_MSEC
 	int "Watchdog timeout in milliseconds"

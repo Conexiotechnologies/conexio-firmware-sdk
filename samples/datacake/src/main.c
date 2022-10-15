@@ -29,6 +29,9 @@
 #include "certificates.h"
 #include "env_sensors.h"
 #include "watchdog.h"
+#include "battery.h"
+
+#include <math.h>
 #include <stdlib.h>
 
 LOG_MODULE_REGISTER(mqtt_app, CONFIG_MQTT_DATACAKE_LOG_LEVEL);
@@ -142,6 +145,18 @@ static void modem_battery_voltage_send(void)
 	{
 		LOG_INF("modem battery: %u volts", bat_voltage);
 	}
+
+    /* Request battery voltage data from the fuel guage circuit and publish to cloud */
+	// bat_voltage = battery_sample();
+
+	// if (bat_voltage < 0) {
+	// 	LOG_ERR("Failed to read battery voltage: %d\n", bat_voltage);
+	// }
+	// else 
+	// {
+	// 	LOG_INF("Device battery: %d mV", bat_voltage);
+	// }
+
 	/* Composes a string formatting for the data */
 	snprintf(buf, sizeof(buf),"%u", bat_voltage);
 
@@ -198,6 +213,9 @@ static void env_data_send(void)
 			}
 		}
 	}
+
+	modem_battery_voltage_send();
+	 
 	return;
 error:
 	LOG_ERR("sensor_data_send failed: %d", err);
@@ -747,14 +765,18 @@ static int modem_data_init(void)
  */
 static int modem_configure(void)
 {
-	/* Turn off LTE power saving features for a more responsive demo. Also,
-	 * request power saving features before network registration. Some
-	 * networks rejects timer updates after the device has registered to the
-	 * LTE network.
-	 */
-	LOG_INF("Disabling PSM and eDRX");
-	lte_lc_psm_req(false);
-	lte_lc_edrx_req(false);
+	int err;
+
+	LOG_INF("Enabling PSM and eDRX");
+	err = lte_lc_psm_req(true);
+	if (err) {
+		printk("lte_lc_psm_req, error: %d\n", err);
+	}
+
+	err = lte_lc_edrx_req(false);
+	if (err) {
+		printk("lte_lc_edrx_req, error: %d\n", err);
+	}
 
 #if defined(CONFIG_LTE_LINK_CONTROL)
 	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
@@ -770,7 +792,7 @@ static int modem_configure(void)
 		k_sem_take(&carrier_registered, K_FOREVER);
 		LOG_INF("Registered!");
 #else /* defined(CONFIG_LWM2M_CARRIER) */
-		int err;
+		
 
 		LOG_INF("LTE Link Connecting...");
 		err = lte_lc_init_and_connect();
