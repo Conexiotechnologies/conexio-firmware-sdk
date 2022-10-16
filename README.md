@@ -46,7 +46,7 @@ The current sample applications are compatible for nRF Connect SDK (NCS) v1.7.0.
 
 
 
-### [📚 Dive in to the docs here →] (coming soon!)
+### [📚 Dive into the docs here →] [Getting Started](https://docs.conexiotech.com/)
 
 ## Stratus Sample Applications Roadmap
 
