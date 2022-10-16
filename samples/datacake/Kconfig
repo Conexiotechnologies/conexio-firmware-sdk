@@ -1,15 +1,12 @@
 #
-# Copyright (c) 2020 Nordic Semiconductor ASA
-# Copyright (c) 2021 Conexio Technologies, Inc
-#
-# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+# Copyright (c) 2022 Conexio Technologies, Inc
 #
 
 menu "Stratus MQTT to Datacake sample"
 
 config APP_VERSION
 	string "Application version"
-	default "v1.0.1"
+	default "v1.0.2"
 
 config APPLICATION_WORKQUEUE_STACK_SIZE
 	int "Application workqueue stack size"
@@ -133,13 +130,12 @@ config CLOUD_MESSAGE_PUBLICATION_INTERVAL
 config WATCHDOG_TIMEOUT_MSEC
 	int "Watchdog timeout in milliseconds"
 	default 60000
-
-endmenu
-
-menu "Zephyr Kernel"
-source "Kconfig.zephyr"
 endmenu
 
 module = MQTT_DATACAKE
 module-str = MQTT Datacake
 source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu

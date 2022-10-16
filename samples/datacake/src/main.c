@@ -1,10 +1,10 @@
+/*---------------------------------------------------------------------------*/
 /*
- * Copyright (c) 2018 Nordic Semiconductor ASA
- * Copyright (c) 2021 Conexio Technologies, Inc
- * 
+ * Copyright (c) 2020 Nordic Semiconductor ASA
+ * Copyright (c) 2022 Conexio Technologies, Inc
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
-
+/*---------------------------------------------------------------------------*/
 #include <zephyr.h>
 #include <stdio.h>
 #include <drivers/uart.h>
@@ -21,20 +21,15 @@
 #if defined(CONFIG_MODEM_KEY_MGMT)
 #include <modem/modem_key_mgmt.h>
 #endif
-#if defined(CONFIG_LWM2M_CARRIER)
-#include <lwm2m_carrier.h>
-#endif
 #include <dk_buttons_and_leds.h>
-
 #include "certificates.h"
 #include "env_sensors.h"
-#include "watchdog.h"
-#include "battery.h"
-
 #include <math.h>
 #include <stdlib.h>
-
+/*---------------------------------------------------------------------------*/
 LOG_MODULE_REGISTER(mqtt_app, CONFIG_MQTT_DATACAKE_LOG_LEVEL);
+
+K_SEM_DEFINE(lte_connected, 0, 1);
 
 static struct k_work_delayable cloud_update_work;
 
@@ -66,10 +61,9 @@ static struct modem_param_info modem_param;
 int32_t rsrp_value_latest;
 
 /* Stack definition for application workqueue */
-K_THREAD_STACK_DEFINE(application_stack_area,
-		      CONFIG_APPLICATION_WORKQUEUE_STACK_SIZE);
+K_THREAD_STACK_DEFINE(application_stack_area, CONFIG_APPLICATION_WORKQUEUE_STACK_SIZE);
 static struct k_work_q application_work_q;
-
+/*---------------------------------------------------------------------------*/
 /* Forward declaration of functions */
 #if defined(CONFIG_ENVIRONMENT_SENSORS)
 static void env_data_send(void);
@@ -82,7 +76,7 @@ static int data_publish(struct mqtt_client *c, enum mqtt_qos qos,
 #if CONFIG_MODEM_INFO
 static void modem_rsrp_data_send(void);
 #endif /* CONFIG_MODEM_INFO */
-
+/*---------------------------------------------------------------------------*/
 #if defined(CONFIG_APP_VERSION)
 /**@brief Send application version information to Datacake. */
 static void app_version_info_send(void)
@@ -96,10 +90,12 @@ static void app_version_info_send(void)
 
 	if (err) {
 		LOG_ERR("Publishing of app_version_info failed: %d", err);
+	} else {
+		LOG_ERR("Publishing of app_version_info PASSED");
 	}
 }
 #endif /* CONFIG_APP_VERSION */
-
+/*---------------------------------------------------------------------------*/
 /* Publish the Stratus button state */
 static void button_state_info_send(void)
 {
@@ -114,7 +110,7 @@ static void button_state_info_send(void)
 		LOG_ERR("Publishing of button_state_data failed: %d", err);
 	}	
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Send client ID information to Datacake. */
 static void client_id_send(void)
 {
@@ -129,7 +125,7 @@ static void client_id_send(void)
 		LOG_ERR("Publishing of client_id failed: %d", err);
 	}
 }
-
+/*---------------------------------------------------------------------------*/
 /* Request battery voltage data from the modem and publish to cloud */
 static void modem_battery_voltage_send(void)
 {
@@ -146,17 +142,6 @@ static void modem_battery_voltage_send(void)
 		LOG_INF("modem battery: %u volts", bat_voltage);
 	}
 
-    /* Request battery voltage data from the fuel guage circuit and publish to cloud */
-	// bat_voltage = battery_sample();
-
-	// if (bat_voltage < 0) {
-	// 	LOG_ERR("Failed to read battery voltage: %d\n", bat_voltage);
-	// }
-	// else 
-	// {
-	// 	LOG_INF("Device battery: %d mV", bat_voltage);
-	// }
-
 	/* Composes a string formatting for the data */
 	snprintf(buf, sizeof(buf),"%u", bat_voltage);
 
@@ -170,7 +155,7 @@ static void modem_battery_voltage_send(void)
 		LOG_ERR("Publishing of batt volt failed: %d", err);
 	}
 }
-
+/*---------------------------------------------------------------------------*/
 #if defined(CONFIG_ENVIRONMENT_SENSORS)
 /**@brief Get environment data from sensors and send to cloud. */
 static void env_data_send(void)
@@ -221,7 +206,7 @@ error:
 	LOG_ERR("sensor_data_send failed: %d", err);
 }
 #endif /* CONFIG_ENVIRONMENT_SENSORS */
-
+/*---------------------------------------------------------------------------*/
 /* Periodically Update the cloud with the device vitals */
 static void cloud_update_work_fn(struct k_work *work)
 {
@@ -236,20 +221,37 @@ static void cloud_update_work_fn(struct k_work *work)
 			&cloud_update_work,
 			K_SECONDS(CONFIG_CLOUD_MESSAGE_PUBLICATION_INTERVAL));
 }
-
+/*---------------------------------------------------------------------------*/
 static void work_init(void)
 {
 	k_work_init_delayable(&cloud_update_work, cloud_update_work_fn);
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Initializes the sensors that are used by the application. */
 static void sensors_init(void)
 {
 #if defined(CONFIG_ENVIRONMENT_SENSORS)
 	env_sensors_init_and_start(&application_work_q, env_data_send);
 #endif /* CONFIG_ENVIRONMENT_SENSORS */
-
 }
+/*---------------------------------------------------------------------------*/
+/* Publish device data on button press */
+static void button_handler(uint32_t button_states, uint32_t has_changed)
+{
+	if (has_changed & button_states & BIT(CONFIG_BUTTON_EVENT_BTN_NUM - 1)) {
+		button_state_data[0] = '1';
+		
+		app_version_info_send();
+		client_id_send();
+		env_data_send();
+
+		k_work_schedule(&cloud_update_work, K_NO_WAIT);
+	}
+	else {
+		button_state_data[0] = '0';
+	}
+}
+/*---------------------------------------------------------------------------*/
 #if defined(CONFIG_MQTT_LIB_TLS)
 static int certificates_provision(void)
 {
@@ -268,86 +270,20 @@ static int certificates_provision(void)
 		return err;
 	}
 
-#elif defined(CONFIG_BOARD_QEMU_X86) && defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS)
-
-	err = tls_credential_add(CONFIG_MQTT_TLS_SEC_TAG,
-				 TLS_CREDENTIAL_CA_CERTIFICATE,
-				 CA_CERTIFICATE,
-				 sizeof(CA_CERTIFICATE));
-	if (err) {
-		LOG_ERR("Failed to register CA certificate: %d", err);
-		return err;
-	}
-
 #endif
 
 	return err;
 }
 #endif /* defined(CONFIG_MQTT_LIB_TLS) */
-
+/*---------------------------------------------------------------------------*/
 #if defined(CONFIG_NRF_MODEM_LIB)
-
 /**@brief Recoverable modem library error. */
 void nrf_modem_recoverable_error_handler(uint32_t err)
 {
 	LOG_ERR("Modem library recoverable error: %u", (unsigned int)err);
 }
-
 #endif /* defined(CONFIG_NRF_MODEM_LIB) */
-
-#if defined(CONFIG_LWM2M_CARRIER)
-K_SEM_DEFINE(carrier_registered, 0, 1);
-int lwm2m_carrier_event_handler(const lwm2m_carrier_event_t *event)
-{
-	switch (event->type) {
-	case LWM2M_CARRIER_EVENT_BSDLIB_INIT:
-		LOG_INF("LWM2M_CARRIER_EVENT_BSDLIB_INIT");
-		break;
-	case LWM2M_CARRIER_EVENT_CONNECTING:
-		LOG_INF("LWM2M_CARRIER_EVENT_CONNECTING");
-		break;
-	case LWM2M_CARRIER_EVENT_CONNECTED:
-		LOG_INF("LWM2M_CARRIER_EVENT_CONNECTED");
-		break;
-	case LWM2M_CARRIER_EVENT_DISCONNECTING:
-		LOG_INF("LWM2M_CARRIER_EVENT_DISCONNECTING");
-		break;
-	case LWM2M_CARRIER_EVENT_DISCONNECTED:
-		LOG_INF("LWM2M_CARRIER_EVENT_DISCONNECTED");
-		break;
-	case LWM2M_CARRIER_EVENT_BOOTSTRAPPED:
-		LOG_INF("LWM2M_CARRIER_EVENT_BOOTSTRAPPED");
-		break;
-	case LWM2M_CARRIER_EVENT_REGISTERED:
-		LOG_INF("LWM2M_CARRIER_EVENT_REGISTERED");
-		k_sem_give(&carrier_registered);
-		break;
-	case LWM2M_CARRIER_EVENT_DEFERRED:
-		LOG_INF("LWM2M_CARRIER_EVENT_DEFERRED");
-		break;
-	case LWM2M_CARRIER_EVENT_FOTA_START:
-		LOG_INF("LWM2M_CARRIER_EVENT_FOTA_START");
-		break;
-	case LWM2M_CARRIER_EVENT_REBOOT:
-		LOG_INF("LWM2M_CARRIER_EVENT_REBOOT");
-		break;
-	case LWM2M_CARRIER_EVENT_LTE_READY:
-		LOG_INF("LWM2M_CARRIER_EVENT_LTE_READY");
-		break;
-	case LWM2M_CARRIER_EVENT_ERROR:
-		LOG_ERR("LWM2M_CARRIER_EVENT_ERROR: code %d, value %d",
-			((lwm2m_carrier_event_error_t *)event->data)->code,
-			((lwm2m_carrier_event_error_t *)event->data)->value);
-		break;
-	default:
-		LOG_WRN("Unhandled LWM2M_CARRIER_EVENT: %d", event->type);
-		break;
-	}
-
-	return 0;
-}
-#endif /* defined(CONFIG_LWM2M_CARRIER) */
-
+/*---------------------------------------------------------------------------*/
 /**@brief Function to print strings without null-termination
  */
 static void data_print(uint8_t *prefix, uint8_t *data, size_t len)
@@ -358,7 +294,7 @@ static void data_print(uint8_t *prefix, uint8_t *data, size_t len)
 	buf[len] = 0;
 	LOG_INF("%s%s", log_strdup(prefix), log_strdup(buf));
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Function to publish data on the configured topic */
 static int data_publish(struct mqtt_client *c, enum mqtt_qos qos, char *pub_topic,
 	uint8_t *data, size_t len)
@@ -380,7 +316,7 @@ static int data_publish(struct mqtt_client *c, enum mqtt_qos qos, char *pub_topi
 
     return mqtt_publish(c, &param);
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Function to subscribe to the configured topic
  */
 static int subscribe(void)
@@ -404,7 +340,7 @@ static int subscribe(void)
 
 	return mqtt_subscribe(&client, &subscription_list);
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Function to read the published payload */
 static int publish_get_payload(struct mqtt_client *c, size_t length)
 {
@@ -414,7 +350,7 @@ static int publish_get_payload(struct mqtt_client *c, size_t length)
 
 	return mqtt_readall_publish_payload(c, payload_buf, length);
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief MQTT client event handler */
 void mqtt_evt_handler(struct mqtt_client *const c,
 		      const struct mqtt_evt *evt)
@@ -496,7 +432,7 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 		break;
 	}
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Resolves the configured hostname and
  * initializes the MQTT broker structure
  */
@@ -552,7 +488,7 @@ static int broker_init(void)
 
 	return err;
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Get the device IMEI number/ID */
 static const uint8_t* client_id_get(void)
 {
@@ -576,7 +512,7 @@ static const uint8_t* client_id_get(void)
 
 	return client_id;
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Initialize the MQTT client structure */
 static int client_init(struct mqtt_client *client)
 {
@@ -646,7 +582,7 @@ static int client_init(struct mqtt_client *client)
 
 	return err;
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Initialize the file descriptor structure used by poll */
 static int fds_init(struct mqtt_client *c)
 {
@@ -664,24 +600,7 @@ static int fds_init(struct mqtt_client *c)
 
 	return 0;
 }
-
-/* Publish device data on button press */
-static void button_handler(uint32_t button_states, uint32_t has_changed)
-{
-	if (has_changed & button_states & BIT(CONFIG_BUTTON_EVENT_BTN_NUM - 1)) {
-		button_state_data[0] = '1';
-		
-		app_version_info_send();
-		client_id_send();
-		env_data_send();
-
-		k_work_schedule(&cloud_update_work, K_NO_WAIT);
-	}
-	else {
-		button_state_data[0] = '0';
-	}
-}
-
+/*---------------------------------------------------------------------------*/
 #if CONFIG_MODEM_INFO
 static void modem_rsrp_handler(char rsrp_value)
 {
@@ -701,7 +620,7 @@ static void modem_rsrp_handler(char rsrp_value)
 	LOG_DBG("Incoming RSRP status message, RSRP value is %d",
 		rsrp_value_latest);
 }
-
+/*---------------------------------------------------------------------------*/
 /**@brief Publish RSRP data to the cloud. */
 static void modem_rsrp_data_send(void)
 {
@@ -733,7 +652,7 @@ static void modem_rsrp_data_send(void)
 	}
 	rsrp_prev = rsrp_current;
 }
-
+/*---------------------------------------------------------------------------*/
 static int modem_data_init(void)
 {
 	int err;
@@ -760,14 +679,57 @@ static int modem_data_init(void)
 }
 #endif /* CONFIG_MODEM_INFO */
 
-/**@brief Configures modem to provide LTE link. Blocks until link is
- * successfully established.
- */
-static int modem_configure(void)
+#if defined(CONFIG_NRF_MODEM_LIB)
+/*---------------------------------------------------------------------------*/
+static void lte_handler(const struct lte_lc_evt *const evt)
+{
+	switch (evt->type) {
+	case LTE_LC_EVT_NW_REG_STATUS:
+		if ((evt->nw_reg_status != LTE_LC_NW_REG_REGISTERED_HOME) &&
+		     (evt->nw_reg_status != LTE_LC_NW_REG_REGISTERED_ROAMING)) {
+			break;
+		}
+
+		printk("Network registration status: %s\n",
+			evt->nw_reg_status == LTE_LC_NW_REG_REGISTERED_HOME ?
+			"Connected - home network" : "Connected - roaming\n");
+		k_sem_give(&lte_connected);
+		break;
+	case LTE_LC_EVT_PSM_UPDATE:
+		printk("PSM parameter update: TAU: %d, Active time: %d\n",
+			evt->psm_cfg.tau, evt->psm_cfg.active_time);
+		break;
+	case LTE_LC_EVT_EDRX_UPDATE: {
+		char log_buf[60];
+		ssize_t len;
+
+		len = snprintf(log_buf, sizeof(log_buf),
+			       "eDRX parameter update: eDRX: %f, PTW: %f\n",
+			       evt->edrx_cfg.edrx, evt->edrx_cfg.ptw);
+		if (len > 0) {
+			printk("%s\n", log_buf);
+		}
+		break;
+	}
+	case LTE_LC_EVT_RRC_UPDATE:
+		printk("RRC mode: %s\n",
+			evt->rrc_mode == LTE_LC_RRC_MODE_CONNECTED ?
+			"Connected" : "Idle\n");
+		break;
+	case LTE_LC_EVT_CELL_UPDATE:
+		printk("LTE cell changed: Cell ID: %d, Tracking area: %d\n",
+		       evt->cell.id, evt->cell.tac);
+		break;
+	default:
+		break;
+	}
+}
+/*---------------------------------------------------------------------------*/
+static int configure_low_power(void)
 {
 	int err;
 
-	LOG_INF("Enabling PSM and eDRX");
+	/** Power Saving Mode */
 	err = lte_lc_psm_req(true);
 	if (err) {
 		printk("lte_lc_psm_req, error: %d\n", err);
@@ -778,35 +740,41 @@ static int modem_configure(void)
 		printk("lte_lc_edrx_req, error: %d\n", err);
 	}
 
-#if defined(CONFIG_LTE_LINK_CONTROL)
-	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
-		/* Do nothing, modem is already turned on
-		 * and connected.
-		 */
-	} else {
-#if defined(CONFIG_LWM2M_CARRIER)
-		/* Wait for the LWM2M_CARRIER to configure the modem and
-		 * start the connection.
-		 */
-		LOG_INF("Waitng for carrier registration...");
-		k_sem_take(&carrier_registered, K_FOREVER);
-		LOG_INF("Registered!");
-#else /* defined(CONFIG_LWM2M_CARRIER) */
-		
-
-		LOG_INF("LTE Link Connecting...");
-		err = lte_lc_init_and_connect();
-		if (err) {
-			LOG_INF("Failed to establish LTE connection: %d", err);
-			return err;
-		}
-		LOG_INF("LTE Link Connected!");
-#endif /* defined(CONFIG_LWM2M_CARRIER) */
-	}
-#endif /* defined(CONFIG_LTE_LINK_CONTROL) */
-
-	return 0;
+	return err;
 }
+/*---------------------------------------------------------------------------*/
+static void modem_init(void)
+{
+	int err;
+
+	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
+		/* Do nothing, modem is already configured and LTE connected. */
+	} else {
+		err = lte_lc_init();
+		if (err) {
+			printk("Modem initialization failed, error: %d\n", err);
+			return;
+		}
+	}
+}
+/*---------------------------------------------------------------------------*/
+static void modem_connect(void)
+{
+	int err;
+
+	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
+		/* Do nothing, modem is already configured and LTE connected. */
+	} else {
+		err = lte_lc_connect_async(lte_handler);
+		if (err) {
+			printk("Connecting to LTE network failed, error: %d\n",
+			       err);
+			return;
+		}
+	}
+}
+/*---------------------------------------------------------------------------*/
+#endif
 
 void main(void)
 {
@@ -819,10 +787,6 @@ void main(void)
 		       K_THREAD_STACK_SIZEOF(application_stack_area),
 		       CONFIG_APPLICATION_WORKQUEUE_PRIORITY, NULL);
 
-	if (IS_ENABLED(CONFIG_WATCHDOG)) {
-		watchdog_init_and_start(&application_work_q);
-	}
-
 #if defined(CONFIG_MQTT_LIB_TLS)
 	err = certificates_provision();
 	if (err != 0) {
@@ -831,14 +795,23 @@ void main(void)
 	}
 #endif /* defined(CONFIG_MQTT_LIB_TLS) */
 
-	do {
-		err = modem_configure();
-		if (err) {
-			LOG_INF("Retrying in %d seconds",
-				CONFIG_LTE_CONNECT_RETRY_DELAY_S);
-			k_sleep(K_SECONDS(CONFIG_LTE_CONNECT_RETRY_DELAY_S));
-		}
-	} while (err);
+#if defined(CONFIG_NRF_MODEM_LIB)
+
+	/* Initialize the modem before calling configure_low_power(). This is
+	 * because the enabling of RAI is dependent on the
+	 * configured network mode which is set during modem initialization.
+	 */
+	modem_init();
+
+	err = configure_low_power();
+	if (err) {
+		printk("Unable to set low power configuration, error: %d\n", err);
+	}
+
+	modem_connect();
+
+	k_sem_take(&lte_connected, K_FOREVER);
+#endif
 
 #if CONFIG_MODEM_INFO
 	err = modem_data_init();
@@ -856,11 +829,10 @@ void main(void)
 	work_init();
 	dk_buttons_init(button_handler);
 	sensors_init();
-	
+
 do_connect:
 	if (connect_attempt++ > 0) {
-		LOG_INF("Reconnecting in %d seconds...",
-			CONFIG_MQTT_RECONNECT_DELAY_S);
+		LOG_INF("Reconnecting in %d seconds...", CONFIG_MQTT_RECONNECT_DELAY_S);
 		k_sleep(K_SECONDS(CONFIG_MQTT_RECONNECT_DELAY_S));
 	}
 	err = mqtt_connect(&client);
@@ -915,3 +887,4 @@ do_connect:
 	}
 	goto do_connect;
 }
+/*---------------------------------------------------------------------------*/
