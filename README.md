@@ -70,7 +70,7 @@ This repository is still under development and we have many example applications
 | Memfault cloud client            				 | ✅ |
 | Watchdog timer            					 | ⏳ |
 | TeraBee level sensing                    		 | ⏳ |
-| GPS                    						 | ⏳ |
+| GPS                    						 | ✅ |
 | Cellular based location                        | ⏳ |
 | Asset tracking                         	     | ⏳ |
 | Qubitro cloud client             				 | ⏳ |
