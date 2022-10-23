@@ -105,7 +105,6 @@ static void button_state_info_send(void)
 					CONFIG_MQTT_PUB_TOPIC_BUTTON,
 					button_state_data,
 					sizeof(button_state_data)-1);
-
 	if (err) {
 		LOG_ERR("Publishing of button_state_data failed: %d", err);
 	}	
@@ -120,7 +119,6 @@ static void client_id_send(void)
 					CONFIG_MQTT_PUB_TOPIC_IMEI,
 					client_id,
 					strlen(client_id));
-
 	if (err) {
 		LOG_ERR("Publishing of client_id failed: %d", err);
 	}
@@ -150,7 +148,6 @@ static void modem_battery_voltage_send(void)
 					CONFIG_MQTT_PUB_TOPIC_BAT,
 					buf,
 					strlen(buf)); //since MQTT publishes string format
-
 	if (err) {
 		LOG_ERR("Publishing of batt volt failed: %d", err);
 	}
@@ -215,7 +212,6 @@ static void cloud_update_work_fn(struct k_work *work)
 
 	modem_battery_voltage_send();
 	modem_rsrp_data_send();
-	button_state_info_send();
 
 	k_work_schedule(
 			&cloud_update_work,
@@ -232,6 +228,8 @@ static void sensors_init(void)
 {
 #if defined(CONFIG_ENVIRONMENT_SENSORS)
 	env_sensors_init_and_start(&application_work_q, env_data_send);
+	LOG_INF("Sending environmental data to cloud at intervals of %d sec", 
+			CONFIG_ENVIRONMENT_DATA_SEND_INTERVAL);
 #endif /* CONFIG_ENVIRONMENT_SENSORS */
 }
 /*---------------------------------------------------------------------------*/
@@ -243,7 +241,9 @@ static void button_handler(uint32_t button_states, uint32_t has_changed)
 		
 		app_version_info_send();
 		client_id_send();
+		modem_rsrp_data_send();
 		env_data_send();
+		button_state_info_send();
 
 		k_work_schedule(&cloud_update_work, K_NO_WAIT);
 	}
@@ -633,13 +633,8 @@ static void modem_rsrp_data_send(void)
 	/* Take into account the RSRP offset value */
 	rsrp_current = rsrp_value_latest - MODEM_INFO_RSRP_OFFSET_VAL;
 
-	LOG_INF("RSRP: %d", rsrp_current);
+	LOG_INF("Publishing RSRP: %d", rsrp_current);
     
-	/* If last sent data to cloud is same as current, skip publishing */
-	if (rsrp_current == rsrp_prev) {
-		return;
-	}
-	
 	snprintf(buf, sizeof(buf),"%d", rsrp_current);
 	err = data_publish(&client,
 					MQTT_QOS_1_AT_LEAST_ONCE,
@@ -725,7 +720,7 @@ static void lte_handler(const struct lte_lc_evt *const evt)
 	}
 }
 /*---------------------------------------------------------------------------*/
-static int configure_low_power(void)
+static int configure_lte_low_power(void)
 {
 	int err;
 
@@ -742,40 +737,35 @@ static int configure_low_power(void)
 
 	return err;
 }
-/*---------------------------------------------------------------------------*/
-static void modem_init(void)
-{
-	int err;
-
-	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
-		/* Do nothing, modem is already configured and LTE connected. */
-	} else {
-		err = lte_lc_init();
-		if (err) {
-			printk("Modem initialization failed, error: %d\n", err);
-			return;
-		}
-	}
-}
-/*---------------------------------------------------------------------------*/
-static void modem_connect(void)
-{
-	int err;
-
-	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
-		/* Do nothing, modem is already configured and LTE connected. */
-	} else {
-		err = lte_lc_connect_async(lte_handler);
-		if (err) {
-			printk("Connecting to LTE network failed, error: %d\n",
-			       err);
-			return;
-		}
-	}
-}
-/*---------------------------------------------------------------------------*/
 #endif
+/*---------------------------------------------------------------------------*/
+/**@brief Configures modem to provide LTE link. Blocks until link is
+ * successfully established.
+ */
+static int modem_connect(void)
+{
+#if defined(CONFIG_NRF_MODEM_LIB)
+	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
+		/* Do nothing, modem is already turned on */
+		/* and connected */
+		goto connected;
+	}
+	LOG_INF("Connecting to LTE network.");
+	LOG_INF("This may take several minutes.");
 
+	int err = lte_lc_init_and_connect();
+	if (err) {
+		LOG_ERR("LTE link could not be established.");
+		return err;
+	}
+
+connected:
+	LOG_INF("Connected to LTE network.");
+
+#endif /* defined(CONFIG_NRF_MODEM_LIB) */
+	return 0;
+}
+/*---------------------------------------------------------------------------*/
 void main(void)
 {
 	int err;
@@ -790,28 +780,26 @@ void main(void)
 #if defined(CONFIG_MQTT_LIB_TLS)
 	err = certificates_provision();
 	if (err != 0) {
-		LOG_ERR("Failed to provision certificates");
+		LOG_ERR("Failed to provision certificates"); 
 		return;
 	}
 #endif /* defined(CONFIG_MQTT_LIB_TLS) */
 
-#if defined(CONFIG_NRF_MODEM_LIB)
+#if defined(CONFIG_LTE_LINK_CONTROL)
+	lte_lc_register_handler(lte_handler);
+#endif /* defined(CONFIG_LTE_LINK_CONTROL) */
 
-	/* Initialize the modem before calling configure_low_power(). This is
-	 * because the enabling of RAI is dependent on the
-	 * configured network mode which is set during modem initialization.
-	 */
-	modem_init();
+	err = configure_lte_low_power();
+		if (err) {
+			printk("Unable to set low power configuration, error: %d\n", err);
+		}
 
-	err = configure_low_power();
-	if (err) {
-		printk("Unable to set low power configuration, error: %d\n", err);
-	}
-
-	modem_connect();
-
-	k_sem_take(&lte_connected, K_FOREVER);
-#endif
+	while (modem_connect() != 0) {
+			LOG_WRN("Failed to establish LTE connection.");
+			LOG_WRN("Will retry in %d seconds.",
+					CONFIG_LTE_CONNECT_RETRY_DELAY_S);
+			k_sleep(K_SECONDS(CONFIG_LTE_CONNECT_RETRY_DELAY_S));
+		}
 
 #if CONFIG_MODEM_INFO
 	err = modem_data_init();
@@ -825,11 +813,11 @@ void main(void)
 		LOG_ERR("client_init: %d", err);
 		return;
 	}
-    
-	work_init();
-	dk_buttons_init(button_handler);
-	sensors_init();
 
+	dk_buttons_init(button_handler);
+	work_init();
+	sensors_init();
+	
 do_connect:
 	if (connect_attempt++ > 0) {
 		LOG_INF("Reconnecting in %d seconds...", CONFIG_MQTT_RECONNECT_DELAY_S);

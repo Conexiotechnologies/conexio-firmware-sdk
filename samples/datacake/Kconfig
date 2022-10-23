@@ -90,7 +90,7 @@ config MQTT_RECONNECT_DELAY_S
 
 config LTE_CONNECT_RETRY_DELAY_S
 	int "Seconds to delay before attempting to retry LTE connection."
-	default 120
+	default 60
 
 config MQTT_TLS_SEC_TAG
 	int "TLS credentials security tag"
