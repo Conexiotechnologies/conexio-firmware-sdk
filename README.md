@@ -68,8 +68,8 @@ This repository is still under development and we have many example applications
 | Golioth firmware over-the-air update  		 | ✅ |
 | Golioth cloud client                         	 | ✅ |
 | Memfault cloud client            				 | ✅ |
-| Watchdog timer            					 | ⏳ |
-| TeraBee level sensing                    		 | ⏳ |
+| Watchdog timer            					 | ✅ |
+| TeraBee level sensing                    		 | ✅ |
 | GPS                    						 | ✅ |
 | Cellular based location                        | ⏳ |
 | Asset tracking                         	     | ⏳ |

@@ -1,0 +1,12 @@
+#
+# Copyright (c) 2022 Conexio Technologies, Inc
+#
+#
+
+module = TERABEE
+module-str = terabee
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
