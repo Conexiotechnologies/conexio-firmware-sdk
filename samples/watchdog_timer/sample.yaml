@@ -1,0 +1,8 @@
+sample:
+  name: watchdog timer
+tests:
+  samples.nrf9160.watchdogtimer:
+    build_only: true
+    build_on_all: false
+    platform_allow: conexio_stratus_ns
+    tags: ci_build
