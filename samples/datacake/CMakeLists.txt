@@ -18,7 +18,9 @@ zephyr_include_directories(src)
 # Include application events and configuration headers
 zephyr_library_include_directories(
   src/env_sensors
+  src/battery
 )
 
 # Application sources
 add_subdirectory_ifdef(CONFIG_ENVIRONMENT_SENSORS src/env_sensors)
+add_subdirectory_ifdef(CONFIG_ADC src/battery)

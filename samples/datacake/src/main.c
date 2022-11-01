@@ -24,6 +24,8 @@
 #include <dk_buttons_and_leds.h>
 #include "certificates.h"
 #include "env_sensors.h"
+#include "battery.h"
+
 #include <math.h>
 #include <stdlib.h>
 /*---------------------------------------------------------------------------*/
@@ -124,12 +126,36 @@ static void client_id_send(void)
 	}
 }
 /*---------------------------------------------------------------------------*/
-/* Request battery voltage data from the modem and publish to cloud */
-static void modem_battery_voltage_send(void)
+/* Request battery voltage data and publish to cloud */
+static void battery_voltage_send(void)
 {
 	int err;
 	int16_t bat_voltage = 0;
 	char buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE] = {0};
+
+#if defined(CONFIG_ADC)
+	/* Request battery voltage data from the fuel guage circuit and publish to cloud */
+	int rc = battery_measure_enable(true);
+
+	if (rc != 0) {
+		printk("Failed to initialize battery measurement: %d\n", rc);
+		return;
+	}
+
+	bat_voltage = battery_sample();
+
+	if (bat_voltage < 0) {
+		LOG_ERR("Failed to read battery voltage: %d\n", bat_voltage);
+	}
+	else 
+	{
+		LOG_INF("Device battery: %d mV", bat_voltage);
+	}
+	battery_measure_enable(false);
+
+#else
+	/* Request battery voltage data from the nRf91 modem and publish to cloud */
+
 	err = modem_info_short_get(MODEM_INFO_BATTERY, &bat_voltage);
 
 	if (err != sizeof(bat_voltage)) {
@@ -139,6 +165,7 @@ static void modem_battery_voltage_send(void)
 	{
 		LOG_INF("modem battery: %u volts", bat_voltage);
 	}
+#endif
 
 	/* Composes a string formatting for the data */
 	snprintf(buf, sizeof(buf),"%u", bat_voltage);
@@ -196,7 +223,7 @@ static void env_data_send(void)
 		}
 	}
 
-	modem_battery_voltage_send();
+	battery_voltage_send();
 	 
 	return;
 error:
@@ -210,7 +237,7 @@ static void cloud_update_work_fn(struct k_work *work)
 	LOG_INF("Sending device vitals to cloud at intervals of %d sec", 
 			CONFIG_CLOUD_MESSAGE_PUBLICATION_INTERVAL);
 
-	modem_battery_voltage_send();
+	battery_voltage_send();
 	modem_rsrp_data_send();
 
 	k_work_schedule(
