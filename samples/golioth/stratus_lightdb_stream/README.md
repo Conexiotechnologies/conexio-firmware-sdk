@@ -1,7 +1,7 @@
 
 # Stratus to Golioth Light DB stream sample
 
-### [📣 Find our walk-through tutorial for this sample application → here](https://www.rajeevpiyare.com/posts/stratus-to-golioth/)
+### [📣 Find our walk-through tutorial for this sample application → here](https://docs.conexiotech.com/sample-applications/golioth)
 
 ## Overview
 
