@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2018-2019 Peter Bigot Consulting, LLC
  * Copyright (c) 2019 Nordic Semiconductor ASA
- *
+ * Copyright (c) 2022 Conexio Technologies, Inc
+ * 
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -9,12 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <zephyr.h>
+#include <zephyr/zephyr.h>
 #include "battery.h"
 
 /** A discharge curve specific to the power source. */
 static const struct battery_level_point levels[] = {
-#if DT_NODE_HAS_PROP(DT_INST(0, voltage_divider), io_channels)
 	/* "Curve" here eyeballed from captured data for the [Adafruit
 	 * 3.7v 2000 mAh](https://www.adafruit.com/product/2011) LIPO
 	 * under full load that started with a charge of 3.96 V and
@@ -30,11 +30,6 @@ static const struct battery_level_point levels[] = {
 	{ 10000, 3950 },
 	{ 625, 3550 },
 	{ 0, 3100 },
-#else
-	/* Linear from maximum voltage to minimum voltage. */
-	{ 10000, 3600 },
-	{ 0, 1700 },
-#endif
 };
 
 static const char *now_str(void)
@@ -60,7 +55,7 @@ static const char *now_str(void)
 
 void main(void)
 {
-	printk("Conexio Stratus battery example\n");
+	printk("Conexio Stratus battery fuel gauge example\n");
 
 	int rc = battery_measure_enable(true);
 
@@ -80,8 +75,7 @@ void main(void)
 
 		unsigned int batt_pptt = battery_level_pptt(batt_mV, levels);
 
-		printk("[%s]: Battery level: %d mV; %u pptt\n", now_str(),
-		       batt_mV, batt_pptt);
+		printk("[%s]: Battery level: %d mV; %u pptt\n", now_str(), batt_mV, batt_pptt);
 
 		/* Burn battery so you can see that this works over time */
 		k_busy_wait(5 * USEC_PER_SEC);

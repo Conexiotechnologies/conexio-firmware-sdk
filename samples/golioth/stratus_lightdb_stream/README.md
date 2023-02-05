@@ -1,7 +1,7 @@
 
 # Stratus to Golioth Light DB stream sample
 
-### [📣 Find our walk-through tutorial for this sample application → here](https://www.rajeevpiyare.com/posts/stratus-to-golioth/)
+### [📣 Find our walk-through tutorial for this sample application → here](https://docs.conexiotech.com/sample-applications/golioth)
 
 ## Overview
 
@@ -23,7 +23,7 @@ Configure the following Kconfig options based on your Golioth credentials:
 by adding these lines to configuration file (e.g. `prj.conf`):
 
 ```
-CONFIG_GOLIOTH_SYSTEM_CLIENT_PSK_ID="my-psk-id"
+CONFIG_GOLIOTH_SYSTEM_CLIENT_PSK_ID="my-psk-id@my-project"
 CONFIG_GOLIOTH_SYSTEM_CLIENT_PSK="my-psk"
 ```
 
@@ -45,13 +45,20 @@ Open up a serial console and reset the Stratus device.
 ## Sample output
 The following serial UART output will be displayed in the terminal. 
 ```
-uart:~$ *** Booting Zephyr OS build v2.6.99-ncs1-rc2  ***
+<inf> regulator_fixed: sensor-pwr-ctrl sync: 0
+uart:~$ *** Booting Zephyr OS build v3.1.99-ncs1  ***
+<inf> lis2dh: fs=2, odr=0x4 lp_en=0x0 scale=9576
 <inf> golioth_system: Initializing
-<dbg> golioth_lightdb_stream.main: Start Stratus <> Golioth Light DB sensor stream sample
+<inf> golioth_lightdb_stream: Stratus < > Golioth Light DB sensor stream sample started
+<inf> golioth_samples: Waiting for interface to be up
 <inf> golioth_system: Starting connect
-<dbg> golioth_lightdb_stream: temp: 26.164263; humidity: 29.002288
 <inf> golioth_system: Client connected!
-<inf> golioth_lightdb_stream: temp: 26.140230; humidity: 28.893554
-<inf> golioth_lightdb_stream: temp: 26.161593; humidity: 28.840148
-<inf> golioth_lightdb_stream: temp: 26.180285; humidity: 28.811538
+<dbg> golioth_lightdb_stream: main: Sending temp: 23.184176; humidity: 13.123367
+<inf> golioth_lightdb_stream: Environmental data successfully pushed
+<dbg> golioth_lightdb_stream: main: Sending temp: 23.184176; humidity: 13.123367
+<dbg> golioth_lightdb_stream: env_data_push_handler: Data successfully pushed to the Golioth Cloud
+<dbg> golioth_lightdb_stream: main: Sending temp: 23.352407; humidity: 12.842971
+<inf> golioth_lightdb_stream: Environmental data successfully pushed
+<dbg> golioth_lightdb_stream: main: Sending temp: 23.352407; humidity: 12.842971
+<dbg> golioth_lightdb_stream: env_data_push_handler: Data successfully pushed to the Golioth Cloud
 ```

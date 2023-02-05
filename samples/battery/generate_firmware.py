@@ -3,7 +3,7 @@
 # This script generates the required binaries
 # for the Conexio Stratus IoT kit
 ##################################################
-# Copyright (c) 2021 Conexio Technologies, Inc
+# Copyright (c) 2022 Conexio Technologies, Inc
 ##################################################
 # Using system() method to execute shell commands
 

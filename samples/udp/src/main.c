@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2020 Nordic Semiconductor ASA
- * Copyright (c) 2022 Conexio Technologies, Inc
+ *
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
-#include <zephyr.h>
+#include <zephyr/kernel.h>
 #include <stdio.h>
 #include <modem/lte_lc.h>
-#include <net/socket.h>
+#include <zephyr/net/socket.h>
 
 #define UDP_IP_HEADER_SIZE 28
 

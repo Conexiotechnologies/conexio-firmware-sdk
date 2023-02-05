@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 Leonard Pollak
- * Copyright (c) 2021 Conexio Technologies, Inc
+ * Copyright (c) 2022 Conexio Technologies, Inc
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -72,9 +72,7 @@ void main(void)
 		}
 #endif
 
-		printf("SHT4X: %.2f Temp. [C] ; %0.2f RH [%%]\n",
-		       sensor_value_to_double(&temp),
-		       sensor_value_to_double(&hum));
+		printf("SHT4X: Temp: %d.%06d degC; RH: %d.%06d %%\n", temp.val1, temp.val2, hum.val1, hum.val2);
 
 		/* Maximum duty cycle for using the heater is 5% */
 #if CONFIG_APP_USE_HEATER && CONFIG_APP_HEATER_PULSE_DURATION == 0

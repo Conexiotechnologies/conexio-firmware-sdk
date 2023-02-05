@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 /*---------------------------------------------------------------------------*/
+#include <zephyr/kernel.h>
 #include <zephyr.h>
 #include <stdio.h>
 #include <drivers/uart.h>
@@ -14,8 +15,7 @@
 #include <nrf_modem.h>
 #include <net/socket.h>
 #include <modem/lte_lc.h>
-#include <modem/at_cmd.h>
-#include <modem/at_notif.h>
+#include <nrf_modem_at.h>
 #include <modem/modem_info.h>
 #include <logging/log.h>
 #if defined(CONFIG_MODEM_KEY_MGMT)
@@ -35,10 +35,10 @@ K_SEM_DEFINE(lte_connected, 0, 1);
 
 static struct k_work_delayable cloud_update_work;
 
-/* Define the length of the IMEI AT COMMAND response buffer */
-#define CGSN_RESP_LEN 19
-#define IMEI_LEN 20
-uint8_t client_id[IMEI_LEN];
+/*** Device ID ***/
+#define IMEI_LEN 15
+#define CGSN_RESPONSE_LENGTH (IMEI_LEN + 6 + 1) /* Add 6 for \r\nOK\r\n and 1 for \0 */
+#define CLIENT_ID_LEN 20
 
 /* Stratus button state data. Not pressed on default */
 char button_state_data[] = "0";
@@ -110,20 +110,6 @@ static void button_state_info_send(void)
 	if (err) {
 		LOG_ERR("Publishing of button_state_data failed: %d", err);
 	}	
-}
-/*---------------------------------------------------------------------------*/
-/**@brief Send client ID information to Datacake. */
-static void client_id_send(void)
-{
-	int err;
-	err = data_publish(&client,
-					MQTT_QOS_1_AT_LEAST_ONCE,
-					CONFIG_MQTT_PUB_TOPIC_IMEI,
-					client_id,
-					strlen(client_id));
-	if (err) {
-		LOG_ERR("Publishing of client_id failed: %d", err);
-	}
 }
 /*---------------------------------------------------------------------------*/
 /* Request battery voltage data and publish to cloud */
@@ -267,7 +253,6 @@ static void button_handler(uint32_t button_states, uint32_t has_changed)
 		button_state_data[0] = '1';
 		
 		app_version_info_send();
-		client_id_send();
 		modem_rsrp_data_send();
 		env_data_send();
 		button_state_info_send();
@@ -319,7 +304,7 @@ static void data_print(uint8_t *prefix, uint8_t *data, size_t len)
 
 	memcpy(buf, data, len);
 	buf[len] = 0;
-	LOG_INF("%s%s", log_strdup(prefix), log_strdup(buf));
+	LOG_INF("%s%s", (char *)prefix, (char *)buf);
 }
 /*---------------------------------------------------------------------------*/
 /**@brief Function to publish data on the configured topic */
@@ -497,7 +482,7 @@ static int broker_init(void)
 
 			inet_ntop(AF_INET, &broker4->sin_addr.s_addr,
 				  ipv4_addr, sizeof(ipv4_addr));
-			LOG_INF("IPv4 Address found %s", log_strdup(ipv4_addr));
+			LOG_INF("IPv4 Address found %s", ipv4_addr);
 
 			break;
 		} else {
@@ -516,26 +501,33 @@ static int broker_init(void)
 	return err;
 }
 /*---------------------------------------------------------------------------*/
-/**@brief Get the device IMEI number/ID */
+/* Function to get the client id */
 static const uint8_t* client_id_get(void)
 {
-	enum at_cmd_state at_state;
-	char imei_buf[CGSN_RESP_LEN];
+	static uint8_t client_id[MAX(sizeof(CONFIG_MQTT_CLIENT_ID),
+				     CLIENT_ID_LEN)];
+
+	if (strlen(CONFIG_MQTT_CLIENT_ID) > 0) {
+		snprintf(client_id, sizeof(client_id), "%s",
+			 CONFIG_MQTT_CLIENT_ID);
+		goto exit;
+	}
+
+	char imei_buf[CGSN_RESPONSE_LENGTH + 1];
 	int err;
 
-	/* Initialize AT CMD driver */
-	err = at_cmd_init();
+	err = nrf_modem_at_cmd(imei_buf, sizeof(imei_buf), "AT+CGSN");
 	if (err) {
-		LOG_ERR("at_cmd failed to initialize, error: %d", err);
+		LOG_ERR("Failed to obtain IMEI, error: %d", err);
+		goto exit;
 	}
-    /* Write AT command, read and store the IMEI number */
-	err = at_cmd_write("AT+CGSN", imei_buf, sizeof(imei_buf), &at_state);
 
-	if (err) {
-		LOG_ERR("Error when trying to do at_cmd_write: %d, at_state: %d",
-			err, at_state);
-	}
-	snprintf(client_id, sizeof(client_id), "%s", imei_buf);
+	imei_buf[IMEI_LEN] = '\0';
+
+	snprintf(client_id, sizeof(client_id), "%.*s", IMEI_LEN, imei_buf);
+
+exit:
+	LOG_DBG("client_id = %s", (char *)(client_id));
 
 	return client_id;
 }
@@ -554,7 +546,7 @@ static int client_init(struct mqtt_client *client)
 	}
     
 	/* Fetch the client ID which will be stored in client_id buffer*/
-	LOG_INF("client_id: %s", log_strdup(client_id_get()));
+	LOG_INF("client_id: %s", client_id_get());
 
 	struct mqtt_utf8 pass, user;
 	pass.utf8 = (uint8_t *)CONFIG_MQTT_PASS;
@@ -658,7 +650,7 @@ static void modem_rsrp_data_send(void)
 
 	/* The RSRP value is copied locally to avoid any race condition */
 	/* Take into account the RSRP offset value */
-	rsrp_current = rsrp_value_latest - MODEM_INFO_RSRP_OFFSET_VAL;
+	rsrp_current = rsrp_value_latest - RSRP_OFFSET_VAL;
 
 	LOG_INF("Publishing RSRP: %d", rsrp_current);
     
@@ -766,6 +758,21 @@ static int configure_lte_low_power(void)
 }
 #endif
 /*---------------------------------------------------------------------------*/
+static void modem_init(void)
+{
+	int err;
+
+	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
+		/* Do nothing, modem is already configured and LTE connected. */
+	} else {
+		err = lte_lc_init();
+		if (err) {
+			printk("Modem initialization failed, error: %d\n", err);
+			return;
+		}
+	}
+}
+/*---------------------------------------------------------------------------*/
 /**@brief Configures modem to provide LTE link. Blocks until link is
  * successfully established.
  */
@@ -773,8 +780,7 @@ static int modem_connect(void)
 {
 #if defined(CONFIG_NRF_MODEM_LIB)
 	if (IS_ENABLED(CONFIG_LTE_AUTO_INIT_AND_CONNECT)) {
-		/* Do nothing, modem is already turned on */
-		/* and connected */
+		/* Do nothing, modem is already configured and LTE connected. */
 		goto connected;
 	}
 	LOG_INF("Connecting to LTE network.");
@@ -816,10 +822,19 @@ void main(void)
 	lte_lc_register_handler(lte_handler);
 #endif /* defined(CONFIG_LTE_LINK_CONTROL) */
 
+#if defined(CONFIG_NRF_MODEM_LIB)
+
+	/* Initialize the modem before calling configure_low_power(). This is
+	 * because the enabling of RAI is dependent on the
+	 * configured network mode which is set during modem initialization.
+	 */
+	modem_init();
+
 	err = configure_lte_low_power();
-		if (err) {
-			printk("Unable to set low power configuration, error: %d\n", err);
-		}
+	if (err) {
+		printk("Unable to set low power configuration, error: %d\n",
+		       err);
+	}
 
 	while (modem_connect() != 0) {
 			LOG_WRN("Failed to establish LTE connection.");
@@ -827,6 +842,7 @@ void main(void)
 					CONFIG_LTE_CONNECT_RETRY_DELAY_S);
 			k_sleep(K_SECONDS(CONFIG_LTE_CONNECT_RETRY_DELAY_S));
 		}
+#endif
 
 #if CONFIG_MODEM_INFO
 	err = modem_data_init();

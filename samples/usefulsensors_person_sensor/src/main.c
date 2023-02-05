@@ -7,17 +7,16 @@
 /*---------------------------------------------------------------------------*/
 #include <zephyr.h>
 #include <stdio.h>
-#include <device.h>
-#include <drivers/i2c.h>
-#include <drivers/sensor.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/i2c.h>
+#include <zephyr/drivers/sensor.h>
 #include "person_sensor.h"
 #include <logging/log.h>
 /*---------------------------------------------------------------------------*/
 /* Register the logging module */
 LOG_MODULE_REGISTER(app, CONFIG_USEFULSENSORS_LOG_LEVEL);
 /*---------------------------------------------------------------------------*/
-const struct device * i2c_device;
-#define I2C_DEV "I2C_1"
+const struct device *i2c_device;
 /*---------------------------------------------------------------------------*/
 static int rc;
 static int i;
@@ -60,22 +59,22 @@ void person_sensor_write_reg(uint8_t reg, uint8_t value) {
 /*
  * Brief : Initialize the I2C bus
  * Param : I2C device 
- * Return : -EINVAL if failed, else 0
+ * Return : -EINVAL if failed, else 0 if Successful
  */
 static int i2c_init(void) {
     LOG_INF("Setting up i2c");
+
+    i2c_device = DEVICE_DT_GET(DT_NODELABEL(i2c1));
     
-    i2c_device = device_get_binding(I2C_DEV);
-    if (i2c_device == NULL) 
-    {
-        LOG_ERR("Failed to get I2C device");
-        return -EINVAL;
-    }
+    if (!device_is_ready(i2c_device)) {
+		LOG_ERR("I2C: Device is not ready");
+		return -EINVAL;
+	}
 
     int ret = i2c_configure(i2c_device, I2C_SPEED_SET(I2C_SPEED_FAST));
     if (ret < 0 )
     {
-        LOG_ERR("I2C Configuration failed");
+        LOG_ERR("I2C: Configuration failed");
         return ret;
     }
 

@@ -1,8 +1,0 @@
-sample:
-  name: Cloud client sample
-tests:
-  samples.nrf9160.cloud_client:
-    build_only: true
-    build_on_all: true
-    platform_allow: conexio_stratus_ns
-    tags: ci_build
