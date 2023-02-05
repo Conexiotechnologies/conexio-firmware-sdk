@@ -11,10 +11,10 @@ In *Active mode* the application sends environmental data [temp & humidity] ever
 ## Prerequisites
 
 Before compiling and flashing this sample application please go over the IoT Creators documentation
-[here] (https://docs.iotcreators.com/docs/3-register-devkit) on how to register and communicate between 
+[here](https://docs.iotcreators.com/docs/3-register-devkit) on how to register and communicate between 
 the IoT Creators platform and your device.
 
-details on how to get started with the Stratus kit can be found [here](https://docs.conexiotech.com/building-and-programming-an-application)
+Details on how to get started with the Stratus kit can be found [here](https://docs.conexiotech.com/building-and-programming-an-application).
 
 ## Building and Running the Sample Application
 To compile the application, open a terminal window in the application directory and issue the following `west` command
