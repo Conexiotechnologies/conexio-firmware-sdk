@@ -419,7 +419,7 @@ void main(void)
     
 	/* Turns Blue LED ON */
 	gpio_pin_set(led_0.port, PIN, 1);
-    k_msleep(1000);
+    	k_msleep(1000);
 	/* Turns Blue LED OFF */
 	gpio_pin_set(led_0.port, PIN, 0);
 
