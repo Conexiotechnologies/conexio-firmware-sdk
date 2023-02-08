@@ -83,7 +83,7 @@ static int i2c_init(void) {
 /*---------------------------------------------------------------------------*/
 void main(void) 
 {
-	LOG_INF("Usefulsensors person sensor sample started"); 
+    LOG_INF("Usefulsensors person sensor sample started"); 
     person_sensor_results_t results = {};
 
     i2c_init();
