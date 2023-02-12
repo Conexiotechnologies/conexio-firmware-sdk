@@ -1,9 +1,9 @@
 manifest:
   projects:
-    - name: nrfconnect
-      revision: v2.1.1
+    - name: nrf-sdk
+      revision: v2.1.0
       url: http://github.com/nrfconnect/sdk-nrf
-      import: true
+      import:
 
   self:
     path: conexio
