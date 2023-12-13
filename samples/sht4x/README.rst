@@ -30,10 +30,7 @@ Building and Running
 This project outputs sensor data to the console. It should work with any platform featuring a I2C peripheral
 interface.
 
-.. zephyr-app-commands::
-   :zephyr-app: samples/sensor/sht4x
-   :board: conexio_stratus_ns
-   :goals: build flash
+   west build -b conexio_stratus_ns
 
 
 Sample Output

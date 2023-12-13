@@ -1,9 +1,0 @@
-sample:
-  name: MQTT sample
-tests:
-  samples.nrf9160.datacake:
-    build_only: true
-    platform_allow: conexio_stratus_ns
-    integration_platforms:
-      - conexio_stratus_ns
-    tags: ci_build

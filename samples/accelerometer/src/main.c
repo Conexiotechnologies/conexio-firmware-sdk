@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2019 Nordic Semiconductor ASA
- * Copyright (c) 2022 Conexio Technologies, Inc
+ * Copyright (c) 2023 Conexio Technologies, Inc
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <stdio.h>
-#include <zephyr.h>
-#include <device.h>
-#include <drivers/sensor.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/sensor.h>
 
 static void fetch_and_display(const struct device *sensor)
 {
@@ -64,18 +64,18 @@ static void trigger_handler(const struct device *dev,
 }
 #endif
 
-void main(void)
+int main(void)
 {
 	printf("Conexio Stratus accelerometer sensor example\n");
 	const struct device *sensor = DEVICE_DT_GET_ANY(st_lis2dh);
 
 	if (sensor == NULL) {
 		printf("No device found\n");
-		return;
+		return 0;
 	}
 	if (!device_is_ready(sensor)) {
 		printf("Device %s is not ready\n", sensor->name);
-		return;
+		return 0;
 	}
 
 #if CONFIG_LIS2DH_TRIGGER
@@ -96,7 +96,7 @@ void main(void)
 					     &odr);
 			if (rc != 0) {
 				printf("Failed to set odr: %d\n", rc);
-				return;
+				return 0;
 			}
 			printf("Sampling at %u Hz\n", odr.val1);
 		}
@@ -104,7 +104,7 @@ void main(void)
 		rc = sensor_trigger_set(sensor, &trig, trigger_handler);
 		if (rc != 0) {
 			printf("Failed to set trigger: %d\n", rc);
-			return;
+			return 0;
 		}
 
 		printf("Waiting for triggers\n");

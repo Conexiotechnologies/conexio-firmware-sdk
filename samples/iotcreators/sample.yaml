@@ -1,9 +1,0 @@
-sample:
-  name: IoTCreators
-tests:
-  samples.nrf9160.iot_creators:
-    build_only: true
-    platform_allow: conexio_sratus_ns
-    integration_platforms:
-      - conexio_sratus_ns
-    tags: ci_build

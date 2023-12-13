@@ -1,22 +1,23 @@
 /*
  * Copyright (c) 2021 Leonard Pollak
- * Copyright (c) 2022 Conexio Technologies, Inc
+ * Copyright (c) 2023 Conexio Technologies, Inc
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include <zephyr.h>
-#include <device.h>
-#include <drivers/sensor.h>
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/sensor.h>
 #include <stdio.h>
 
-#include <drivers/sensor/sht4x.h>
+#include <zephyr/drivers/sensor/sgp40.h>
+#include <zephyr/drivers/sensor/sht4x.h>
 
 #if !DT_HAS_COMPAT_STATUS_OKAY(sensirion_sht4x)
 #error "No sensirion,sht4x compatible node found in the device tree"
 #endif
 
-void main(void)
+int main(void)
 {
 	printf("Conexio Stratus SHT4X sensor example\n");
 
@@ -25,7 +26,7 @@ void main(void)
 
 	if (!device_is_ready(sht)) {
 		printf("Device %s is not ready.\n", sht->name);
-		return;
+		return 0;
 	}
 
 #if CONFIG_APP_USE_HEATER
@@ -44,7 +45,7 @@ void main(void)
 
 		if (sensor_sample_fetch(sht)) {
 			printf("Failed to fetch sample from SHT4X device\n");
-			return;
+			return 0;
 		}
 
 		sensor_channel_get(sht, SENSOR_CHAN_AMBIENT_TEMP, &temp);
@@ -65,7 +66,7 @@ void main(void)
 
 			if (sht4x_fetch_with_heater(sht)) {
 				printf("Failed to fetch sample from SHT4X device\n");
-				return;
+				return 0;
 			}
 
 			sensor_channel_get(sht, SENSOR_CHAN_HUMIDITY, &hum);

@@ -11,29 +11,40 @@ infrastructure to measure the voltage of the device power supply.  Two
 power supply configurations are supported:
 
 * If the board devicetree has a ``/vbatt`` node with compatible
-  ``voltage-divider`` then the voltage is measured using that divider.
-* Otherwise the power source is assumed to be directly connected to the
-  digital voltage signal, and the internal source for ``Vdd`` is
-  selected.
+  ``voltage-divider`` then the voltage is measured using that divider. An
+  example of a devicetree node describing a voltage divider for battery
+  monitoring is:
 
-An example of a Conexio Stratus devicetree node describing a voltage divider 
-for battery monitoring:
+   .. code-block:: devicetree
 
-.. code-block:: none
+      / {
+         vbatt {
+            compatible = "voltage-divider";
+            io-channels = <&adc 7>;
+            output-ohms = <100000>;
+            full-ohms = <(100000 + 100000)>;
+            power-gpios = <&gpio0 25 0>;
+         };
+      };
 
-   / {
-   	vbatt {
-         compatible = "voltage-divider";
-		   io-channels = <&adc 7>;
-		   output-ohms = <100000>;
-		   full-ohms = <(100000 + 100000)>;
-		   power-gpios = <&gpio0 25 0>;
-   	};
-   };
+* If the board does not have a voltage divider and so no ``/vbatt`` node
+  present, the ADC configuration (device and channel) needs to be provided via
+  the ``zephyr,user`` node. In this case the power source is assumed to be
+  directly connected to the digital voltage signal, and the internal source for
+  ``Vdd`` is selected. An example of a Devicetree configuration for this case is
+  shown below:
+
+   .. code-block :: devicetree
+
+      / {
+         zephyr,user {
+            io-channels = <&adc 7>;
+         };
+      };
 
 Note that in many cases where there is no voltage divider the digital
 voltage will be fed from a regulator that provides a fixed voltage
-regardless of source voltage, rather than by the source directly.  In
+regardless of source voltage, rather than by the source directly. In
 configuration involving a regulator the measured voltage will be
 constant.
 

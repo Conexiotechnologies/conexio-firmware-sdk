@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 2018-2019 Peter Bigot Consulting, LLC
  * Copyright (c) 2019 Nordic Semiconductor ASA
- * Copyright (c) 2022 Conexio Technologies, Inc
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 #include "battery.h"
 
 /** A discharge curve specific to the power source. */
@@ -53,7 +52,7 @@ static const char *now_str(void)
 	return buf;
 }
 
-void main(void)
+int main(void)
 {
 	printk("Conexio Stratus battery fuel gauge example\n");
 
@@ -61,7 +60,7 @@ void main(void)
 
 	if (rc != 0) {
 		printk("Failed initialize battery measurement: %d\n", rc);
-		return;
+		return 0;
 	}
 
 	while (true) {
@@ -75,10 +74,12 @@ void main(void)
 
 		unsigned int batt_pptt = battery_level_pptt(batt_mV, levels);
 
-		printk("[%s]: Battery level: %d mV; %u pptt\n", now_str(), batt_mV, batt_pptt);
+		printk("[%s]: Battery level: %d mV; %u pptt\n", now_str(),
+		       batt_mV, batt_pptt);
 
 		/* Burn battery so you can see that this works over time */
 		k_busy_wait(5 * USEC_PER_SEC);
 	}
 	printk("Disable: %d\n", battery_measure_enable(false));
+	return 0;
 }

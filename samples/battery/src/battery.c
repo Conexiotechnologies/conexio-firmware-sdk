@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <zephyr/zephyr.h>
+#include <zephyr/kernel.h>
 #include <zephyr/init.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/adc.h>
@@ -142,7 +142,7 @@ static int divider_setup(void)
 
 static bool battery_ok;
 
-static int battery_setup(const struct device *arg)
+static int battery_setup(void)
 {
 	int rc = divider_setup();
 

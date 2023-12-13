@@ -6,8 +6,9 @@
 
 #include <zephyr/kernel.h>
 #include <stdio.h>
-#include <zephyr/drivers/uart.h>
 #include <string.h>
+#include <modem/nrf_modem_lib.h>
+#include <zephyr/drivers/uart.h>
 #include <zephyr/drivers/clock_control.h>
 #include <zephyr/drivers/clock_control/nrf_clock_control.h>
 
@@ -22,8 +23,19 @@ void enable_xtal(void)
 	(void)onoff_request(clk_mgr, &cli);
 }
 
-void main(void)
+int main(void)
 {
-	enable_xtal();
+	int err;
+
 	printk("The AT host sample started\n");
+
+	err = nrf_modem_lib_init();
+	if (err) {
+		printk("Modem library initialization failed, error: %d\n", err);
+		return 0;
+	}
+	enable_xtal();
+	printk("Ready\n");
+
+	return 0;
 }
