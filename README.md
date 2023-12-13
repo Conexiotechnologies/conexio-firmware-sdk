@@ -3,7 +3,7 @@
 <img src="Design/banner.png" style="margin-bottom:10px" />
 
 Here you will find all the Conexio Stratus (based on nRF9160) application examples and associated files to get started with creating and building your first application.
-The current sample applications are compatible with nRF Connect SDK (NCS) v2.1.x. 
+The current sample applications are compatible with nRF Connect SDK (NCS) v2.5.x. 
 
 ## Getting Started
 
@@ -26,10 +26,10 @@ Now clone the repository, by issuing the following command:
 west update
 ```
 
-Your nRF Connect SDK v2.1.1 folder structure should now look like this:
+Your nRF Connect SDK v2.5.0 folder structure should now look like this:
 
 ```
-v2.1.1/
+v2.5.0/
 ├─ bootloader/
 ├─ conexio/ <- stratus samples folder
 ├─ mbedtls/
