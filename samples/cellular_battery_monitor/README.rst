@@ -13,21 +13,18 @@ The Battery sample demonstrates how to obtain the following battery related info
 * Modem battery voltage low level notifications
 * Power-off warnings (modem firmware v1.3.1 and higher)
 
-The sample uses the :ref:`modem_battery_readme` library.
+The sample uses the `modem_battery` library.
 
 Requirements
 ************
 
-The sample supports the following development kits:
-
-.. table-from-sample-yaml::
-
-.. include:: /includes/tfm.txt
+The sample supports the nRF91 based development kits.
 
 Overview
 ********
 
-The sample first calls the :c:func:`modem_battery_low_level_handler_set` and :c:func:`modem_battery_pofwarn_handler_set` functions to set the respective handlers, and then sets up the workqueues used to handle the low level battery voltage notifications and the power-off warning notifications.
+The sample first calls the :c:func:`modem_battery_low_level_handler_set` and :c:func:`modem_battery_pofwarn_handler_set` functions to set the respective handlers, and then sets up 
+the workqueues used to handle the low level battery voltage notifications and the power-off warning notifications.
 The sample then initializes the :ref:`nrfxlib:nrf_modem`.
 Next, it enters a state machine that measures the modem battery voltage at every iteration and then executes an activity based on that.
 The first activity (:c:func:`init_activity`) sets the modem to *receive-only* mode if the battery voltage drops below the low level threshold or to *normal* mode if it rises above the threshold and updates the state accordingly.
@@ -76,8 +73,6 @@ Building and Running
 
 Testing
 =======
-
-|test_sample|
 
 1. |connect_kit|
 #. |connect_terminal|
@@ -184,3 +179,7 @@ It uses the following `sdk-nrfxlib`_ library:
 In addition, it uses the following secure firmware component:
 
 * :ref:`Trusted Firmware-M <ug_tfm>`
+
+Credit
+=============
+Nordic Semiconductor

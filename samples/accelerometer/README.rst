@@ -31,10 +31,14 @@ and get access to the console where acceleration data is displayed.
 Building on conexio_stratus
 ===========================
 
-:ref:`conexio_stratus` includes a ST LIS2DH12 accelerometer which
+Conexio Stratus DK includes a ST LIS2DH12 accelerometer which
 supports the LIS2DH interface.
 
    west build -b conexio_stratus_ns
+
+Flash the compiled firmware using `newtmgr`
+
+   newtmgr -c serial image upload build/zephyr/app_update.bin
 
 Sample Output
 =============

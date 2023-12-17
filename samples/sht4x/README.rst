@@ -32,6 +32,10 @@ interface.
 
    west build -b conexio_stratus_ns
 
+Flash the compiled firmware using `newtmgr`
+
+   newtmgr -c serial image upload build/zephyr/app_update.bin
+
 
 Sample Output
 =============

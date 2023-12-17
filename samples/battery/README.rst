@@ -60,16 +60,15 @@ Application Details
 The application initializes battery measurement on startup, then loops
 displaying the battery status every five seconds.
 
-Requirements
-************
-
-A Nordic-based board, optionally with a voltage divider specified in its
-devicetree configuration as noted above.
-
 Building and Running
 ********************
 
    west build -b conexio_stratus_ns
+
+Flash the compiled firmware using `newtmgr`
+
+   newtmgr -c serial image upload build/zephyr/app_update.bin
+
 
 Sample Output
 =============

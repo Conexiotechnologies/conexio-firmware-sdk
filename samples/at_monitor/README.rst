@@ -12,11 +12,7 @@ The AT monitor sample demonstrates how to use the :ref:`at_monitor_readme` libra
 Requirements
 ************
 
-The sample supports the following development kits:
-
-.. table-from-sample-yaml::
-
-.. include:: /includes/tfm.txt
+The sample supports the nRF91 based development kits.
 
 Overview
 ********
@@ -26,23 +22,20 @@ The sample then subscribes to both notifications and switches the modem to funct
 While the device is registering to the network, the sample uses one of the AT monitors to determine if the registration is complete and monitors the signal quality using the other monitor.
 Once the device registers with the network, the sample reads the modem PSM mode status, enables it, and reads the PSM mode status again.
 
-.. include:: /libraries/modem/nrf_modem_lib/nrf_modem_lib_trace.rst
-   :start-after: modem_lib_sending_traces_UART_start
-   :end-before: modem_lib_sending_traces_UART_end
-
 Building and running
 ********************
 
    west build -b conexio_stratus_ns
 
+Flash the compiled firmware using `newtmgr`
+
+   newtmgr -c serial image upload build/zephyr/app_update.bin
 
 Testing
 =======
 
-|test_sample|
-
-#. |connect_kit|
-#. |connect_terminal|
+#. Connect the dev kit
+#. Connect the serial terminal
 #. Power on or reset your Conexio Stratus DK.
 #. Observe that the sample starts and connects to the LTE network, while displaying both the network registration status and signal quality during the process.
 #. Observe that the sample displays the PSM status twice on the terminal, once when it is disabled, and once when it is enabled.
@@ -80,17 +73,6 @@ The sample shows the following output:
 	Network registration status: no network
 	Bye
 
-Dependencies
-************
-
-This sample uses the following |NCS| libraries:
-
-* :ref:`at_monitor_readme`
-
-It uses the following `sdk-nrfxlib`_ library:
-
-* :ref:`nrfxlib:nrf_modem`
-
-In addition, it uses the following secure firmware component:
-
-* :ref:`Trusted Firmware-M <ug_tfm>`
+Credit
+=============
+Nordic Semiconductor
