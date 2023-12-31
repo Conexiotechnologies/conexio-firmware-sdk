@@ -84,3 +84,7 @@ west build -b conexio_stratus_ns
 [00:00:39.178,558] <inf> GNSS_sample: Time to first fix: 77 s
 [00:00:39.180,928] <inf> GNSS_sample: GNSS enter sleep after fix
 ```
+
+## Credit 
+
+Nordic Semiconductor
