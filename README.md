@@ -73,7 +73,7 @@ v2.6.0/
         <td>
             <img src="Design/golioth.png"/><br/>
             Connecting Conexio Stratus to Golioth <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-golioth/">Blog</a> | <a href="https://www.hackster.io/piyareraj/connecting-conexio-stratus-to-golioth-platform-e15cd9">Hackster</a> | <a href="samples/cellular/golioth/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-golioth/">Blog</a> | <a href="https://www.hackster.io/piyareraj/connecting-conexio-stratus-to-golioth-platform-e15cd9">Hackster</a> | <a href="https://github.com/Conexiotechnologies/conexio-firmware-sdk/tree/v2.1.1/samples/golioth/stratus_lightdb_stream">Source Code</a>
         </td>
         <td>
             <img src="Design/edge_impulse.png"/><br/>
