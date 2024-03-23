@@ -2,22 +2,23 @@
 
 <img src="Design/banner.png" style="margin-bottom:10px" />
 
-Here you will find all the Conexio Stratus (based on nRF9160) application examples and associated files to get started with creating and building your first application.
-The current sample applications are compatible with nRF Connect SDK (NCS) v2.5.x. 
+Here you will find all the Conexio device application examples and associated files to get started with creating and building your first application.
+These devices include Conexio Stratus Pro and Stratus which are global cellular kits and Conexio Blitz which is BLE 5.4 + WiFi-6 kit.
+The current sample applications are compatible with nRF Connect SDK (NCS) v2.6.x. 
 
 ## Getting Started
 
 The [Conexio docs](https://docs.conexiotech.com/) are a great place to explore our hardware, firmware, & developer tools, and find all the information you need to build your own connected product with Stratus.
 
 To fetch the Stratus sample applications *Using nRF Connect SDK as a manifest repository*
-add the following entry to `west.yml` file in `ncs/v2.5.0/nrf` subtree of the existing west-based project:
+add the following entry to `west.yml` file in `ncs/v2.6.0/nrf` subtree of the existing west-based project:
 
 ```
 # Conexio repository.
     - name: conexio
       path: conexio
       revision: main
-      url: https://github.com/Conexiotechnologies/conexio-stratus-firmware.git
+      url: https://github.com/Conexiotechnologies/conexio-firmware-sdk.git
       import: west-nrf.yml
 ```
 Now clone the repository, by issuing the following command:
@@ -26,10 +27,10 @@ Now clone the repository, by issuing the following command:
 west update
 ```
 
-Your nRF Connect SDK v2.5.0 folder structure should now look like this:
+Your nRF Connect SDK v2.6.0 folder structure should now look like this:
 
 ```
-v2.5.0/
+v2.6.0/
 ├─ bootloader/
 ├─ conexio/ <- stratus samples folder
 ├─ mbedtls/
@@ -50,34 +51,34 @@ v2.5.0/
         <td>
             <img src="Design/nRFConnect.png" /><br/>
             Getting Started with nRF Connect for Visual Studio Code <br/>
-            <a href="https://www.rajeevpiyare.com/posts/nrfconnect-vs-code/">Blog</a> | <a href="https://www.hackster.io/piyareraj/getting-started-with-nrf-connect-for-visual-studio-code-24c882">Hackster</a> | <a href="samples/led_blink/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/nrfconnect-vs-code/">Blog</a> | <a href="https://www.hackster.io/piyareraj/getting-started-with-nrf-connect-for-visual-studio-code-24c882">Hackster</a> | <a href="samples/cellular/led_blink/">Source Code</a>
         </td>  
         <td>
             <img src="Design/getting_started.png" /><br/>
             Up and Running with ZephyrRTOS on Conexio Stratus Platform <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> | <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a> | <a href="samples/led_blink/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> | <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a> | <a href="samples/cellular/led_blink/">Source Code</a>
         </td>        
         <td>
             <img src="Design/datacake.png"/><br/>
             Connecting Conexio Stratus to Datacake Platform <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> | <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> | <a href="samples/datacake/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> | <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> | <a href="samples/cellular/datacake/">Source Code</a>
         </td>       
     </tr>
     <tr>
         <td>
             <img src="Design/edge_impulse.png"/><br/>
             Machine Learning with Conexio Stratus and Edge Impulse <br/>
-            <a href="https://www.rajeevpiyare.com/posts/edge-impulse/">Blog</a> | <a href="https://www.hackster.io/piyareraj/machine-learning-with-conexio-stratus-and-edge-impulse-25ad20">Hackster</a> | <a href="https://github.com/Conexiotechnologies/conexio-stratus-firmware/tree/v1.7.0/samples/edge_impulse">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/edge-impulse/">Blog</a> | <a href="https://www.hackster.io/piyareraj/machine-learning-with-conexio-stratus-and-edge-impulse-25ad20">Hackster</a> | <a href="https://github.com/Conexiotechnologies/conexio-firmware-sdk/tree/v1.7.0/samples/edge_impulse">Source Code</a>
         </td>        
         <td>
             <img src="Design/golioth.png"/><br/>
             Connecting Conexio Stratus to Golioth <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-golioth/">Blog</a> | <a href="https://www.hackster.io/piyareraj/connecting-conexio-stratus-to-golioth-platform-e15cd9">Hackster</a> | <a href="samples/golioth/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-golioth/">Blog</a> | <a href="https://www.hackster.io/piyareraj/connecting-conexio-stratus-to-golioth-platform-e15cd9">Hackster</a> | <a href="samples/cellular/golioth/">Source Code</a>
         </td>
         <td>
             <img src="Design/edge_impulse.png"/><br/>
             Device Debugging and Monitoring using Memfault <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-memfault/">Blog</a> | <a href="https://www.hackster.io/piyareraj/remote-device-debugging-and-monitoring-using-memfault-093aee">Hackster</a> | <a href="https://github.com/Conexiotechnologies/conexio-stratus-firmware/tree/v1.7.0/samples/memfault">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-memfault/">Blog</a> | <a href="https://www.hackster.io/piyareraj/remote-device-debugging-and-monitoring-using-memfault-093aee">Hackster</a> | <a href="https://github.com/Conexiotechnologies/conexio-firmware-sdk/tree/v1.7.0/samples/memfault">Source Code</a>
         </td>        
     </tr>
 </table>
@@ -120,7 +121,7 @@ This repository is still under development and we have many example applications
 
 ## Community
 
-Got Questions? Post it on our [discussions forum](https://github.com/Conexiotechnologies/conexio-stratus-firmware/discussions) or join the conversation in our [Discord channel](https://discord.gg/2CZJTrt6Z5).
+Got Questions? Post it on our [discussions forum](https://github.com/Conexiotechnologies/conexio-firmware-sdk/discussions) or join the conversation in our [Discord channel](https://discord.gg/2CZJTrt6Z5).
 
 ## Have an idea? Notice a bug?
 
