@@ -1,0 +1,13 @@
+#
+# Copyright (c) 2023 Nordic Semiconductor ASA
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+
+source "${ZEPHYR_BASE}/share/sysbuild/Kconfig"
+
+config REMOTE_BOARD
+	string "The board used for remote target"
+	default "conexio_blitz_cpunet" if $(BOARD) = "conexio_blitz_cpuapp"
+	default "conexio_blitz_cpunet" if $(BOARD) = "conexio_blitz_cpuapp_ns"
+	default "UNKNOWN"
