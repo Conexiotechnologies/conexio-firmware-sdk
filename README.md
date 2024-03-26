@@ -51,17 +51,17 @@ v2.6.0/
         <td>
             <img src="Design/nRFConnect.png" /><br/>
             Getting Started with nRF Connect for Visual Studio Code <br/>
-            <a href="https://www.rajeevpiyare.com/posts/nrfconnect-vs-code/">Blog</a> | <a href="https://www.hackster.io/piyareraj/getting-started-with-nrf-connect-for-visual-studio-code-24c882">Hackster</a> | <a href="samples/cellular/led_blink/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/nrfconnect-vs-code/">Blog</a> | <a href="https://www.hackster.io/piyareraj/getting-started-with-nrf-connect-for-visual-studio-code-24c882">Hackster</a> | <a href="samples/conexio_stratus/led_blink/">Source Code</a>
         </td>  
         <td>
             <img src="Design/getting_started.png" /><br/>
             Up and Running with ZephyrRTOS on Conexio Stratus Platform <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> | <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a> | <a href="samples/cellular/led_blink/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> | <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a> | <a href="samples/conexio_stratus/led_blink/">Source Code</a>
         </td>        
         <td>
             <img src="Design/datacake.png"/><br/>
             Connecting Conexio Stratus to Datacake Platform <br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> | <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> | <a href="samples/cellular/datacake/">Source Code</a>
+            <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> | <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> | <a href="samples/conexio_stratus/datacake/">Source Code</a>
         </td>       
     </tr>
     <tr>
