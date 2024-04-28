@@ -4,9 +4,9 @@ LED Blink
 Overview
 ********
 
-Blink is a simple application which blinks an LED forever using the `GPIO
+Blink is a simple application which blinks the user LED forever using the `GPIO
 API`. The source code shows how to configure GPIO pins as outputs,
-then turn them on and off, both on the Stratus main board and the shield.
+then turn them on and off on the Stratus main board.
 
 
 Requirements
@@ -25,11 +25,14 @@ Building and Running
 
 Build and flash Blink sample as follows:
 
-   west build -b conexio_stratus_ns
+   west build -b conexio_stratus_pro_ns
 
 Flash the compiled firmware using `newtmgr`
 
    newtmgr -c serial image upload build/zephyr/app_update.bin
 
+After flashing the Conexio Stratus board, the onboard LED starts to blink every second.
 
-After flashing the Conexio Stratus board, the LED starts to blink every second.
+Credit
+=============
+Nordic Semiconductor
