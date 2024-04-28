@@ -7,7 +7,7 @@ Description
 ***********
 
 This sample application periodically measures the ambient temperature and humidity
-from an SHT4X sensor onboard Conexio Stratus kit. The result is written to the console.
+from an SHT4X sensor connected to  Conexio Stratus kit. The result is written to the console.
 
 The SHT4X has the option to use a heater which makes sense for specific
 environments/applications (refer to the datasheet for more information).
@@ -22,7 +22,7 @@ References
 Wiring
 ******
 
-This sample uses the SHT4X sensor controlled using the I2C interface of the Conexio Stratus shield.
+This sample uses the SHT4X sensor controlled using the I2C interface of the Conexio Stratus.
 
 Building and Running
 ********************
@@ -30,7 +30,9 @@ Building and Running
 This project outputs sensor data to the console. It should work with any platform featuring a I2C peripheral
 interface.
 
-   west build -b conexio_stratus_ns
+   west build -b conexio_stratus_pro_ns  (for Stratus Pro nRF9161)
+
+   west build -b conexio_stratus_ns  (for Stratus nRF9160)
 
 Flash the compiled firmware using `newtmgr`
 
@@ -42,7 +44,7 @@ Sample Output
 
 .. code-block:: console
 
-        Conexio Stratus SHT4X sensor example
+        SHT4X sensor sample running on conexio_stratus_pro
         SHT4X: 23.64 Temp. [C] ; 30.74 RH [%]
         SHT4X: 23.66 Temp. [C] ; 32.16 RH [%]
         SHT4X: 23.63 Temp. [C] ; 30.83 RH [%]

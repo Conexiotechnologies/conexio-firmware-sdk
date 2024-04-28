@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 Leonard Pollak
- * Copyright (c) 2023 Conexio Technologies, Inc
+ * Copyright (c) 2024 Conexio Technologies, Inc
  * 
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -10,7 +10,6 @@
 #include <zephyr/drivers/sensor.h>
 #include <stdio.h>
 
-#include <zephyr/drivers/sensor/sgp40.h>
 #include <zephyr/drivers/sensor/sht4x.h>
 
 #if !DT_HAS_COMPAT_STATUS_OKAY(sensirion_sht4x)
@@ -19,7 +18,7 @@
 
 int main(void)
 {
-	printf("Conexio Stratus SHT4X sensor example\n");
+	printf("SHT4X sensor sample running on %s\n", CONFIG_BOARD);
 
 	const struct device *sht = DEVICE_DT_GET_ANY(sensirion_sht4x);
 	struct sensor_value temp, hum;
