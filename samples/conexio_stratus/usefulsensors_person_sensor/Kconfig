@@ -1,0 +1,12 @@
+#
+# Copyright (c) 2024 Conexio Technologies, Inc
+#
+#
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
+
+module = USEFULSENSORS
+module-str = app
+source "${ZEPHYR_BASE}/subsys/logging/Kconfig.template.log_config"
