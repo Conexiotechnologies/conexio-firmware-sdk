@@ -1,14 +1,21 @@
 #include <stdio.h>
 #include <string.h>
+#include <ncs_version.h>
 
+#include <zephyr/logging/log.h>
 #include <zephyr/kernel.h>
-#include <zephyr/random/rand32.h>
 #include <zephyr/net/socket.h>
 #include <zephyr/net/mqtt.h>
 #include <nrf_modem_at.h>
-#include <zephyr/logging/log.h>
+
 #include <dk_buttons_and_leds.h>
 #include "mqtt_connection.h"
+
+#if NCS_VERSION_NUMBER < 0x20600
+#include <zephyr/random/rand32.h>
+#else 
+#include <zephyr/random/random.h>
+#endif
 
 /* Buffers for MQTT client. */
 static uint8_t rx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
@@ -18,9 +25,9 @@ static uint8_t payload_buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE];
 /* MQTT Broker details. */
 static struct sockaddr_storage broker;
 
-LOG_MODULE_DECLARE(MQTT);
+LOG_MODULE_DECLARE(Lesson4_Exercise1);
 
-/**@brief Function to get the payload of received data.
+/**@brief Function to get the payload of recived data.
  */
 static int get_received_payload(struct mqtt_client *c, size_t length)
 {
@@ -163,7 +170,7 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 		/* On successful extraction of data */
 		if (err >= 0) {
 			data_print("Received: ", payload_buf, p->message.payload.len);
-			// Control the LED on stratus
+			// Control the LED 
 			if(strncmp(payload_buf,CONFIG_TURN_LED_ON_CMD,sizeof(CONFIG_TURN_LED_ON_CMD)-1) == 0){
 				dk_set_led_on(LED_CONTROL_OVER_MQTT);
 			}
@@ -336,9 +343,8 @@ int client_init(struct mqtt_client *client)
 	client->tx_buf = tx_buffer;
 	client->tx_buf_size = sizeof(tx_buffer);
 
-	/* We are not using TLS in Exercise 1 */
+	/* We are not using TLS */
 	client->transport.type = MQTT_TRANSPORT_NON_SECURE;
-
 
 	return err;
 }

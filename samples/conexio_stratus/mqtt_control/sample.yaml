@@ -1,11 +1,11 @@
 sample:
-  name: Simple MQTT
+  name: Cellular IoT Fundamentals Course
 tests:
-  samples.mqtt:
+  samples.cellular.fundamentals_course:
     build_only: true
-    platform_allow: conexio_stratus_ns
+    platform_allow: nrf9161dk_nrf9161_ns nrf9160dk_nrf9160_ns thingy91_nrf9160_ns
     integration_platforms:
+      - nrf9161dk_nrf9161_ns
       - nrf9160dk_nrf9160_ns
       - thingy91_nrf9160_ns
-      - conexio_stratus_ns
     tags: ci_build

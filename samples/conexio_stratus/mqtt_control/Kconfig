@@ -1,25 +1,25 @@
 #
 # Copyright (c) 2020 Nordic Semiconductor ASA
-# Copyright (c) 2023 Conexio Technologies, Inc
+# Copyright (c) 2024 Conexio Technologies, Inc
 #
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
 #
 
-menu "MQTT Device Control Sample"
+menu "Cellfund Lesson 4 Exercise"
 
 config MQTT_PUB_TOPIC
 	string "MQTT publish topic"
-	default "stratus/pub/topic"
+	default "devacademy/publish/topic"
 
 config MQTT_SUB_TOPIC
 	string "MQTT subscribe topic"
-	default "stratus/sub/topic"
+	default "devacademy/subscribe/topic"
 
 config MQTT_CLIENT_ID
 	string "MQTT Client ID"
 	help
 	  Use a custom Client ID string. If not set, the client ID will be
-	  generated based on IMEI number (for nRF9160 based targets) or
+	  generated based on IMEI number (for nRF91 Series based targets) or
 	  randomly (for other platforms).
 	default ""
 
@@ -58,5 +58,3 @@ config MQTT_RECONNECT_DELAY_S
 endmenu
 
 source "Kconfig.zephyr"
-
-

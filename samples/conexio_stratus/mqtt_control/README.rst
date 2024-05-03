@@ -20,9 +20,11 @@ topic, the Blue LED on the board is turned ON. When the `LEDOFF` message is sent
 Building and Running
 ********************
 
-To compile the application issue command
+To compile the application issue command:
 
-   west build -b conexio_stratus_ns
+   west build -b conexio_stratus_pro_ns (For Stratus Pro)
+
+   west build -b conexio_stratus_ns (For GEN 1 Stratus)
 
 Flash the compiled firmware using `newtmgr` to the Stratus DK
 
@@ -35,7 +37,7 @@ Sample Output
 .. code-block:: console
 
       *** Booting nRF Connect SDK v2.5.0 ***
-      [00:00:00.250,854] <inf> MQTT: Starting MQTT sample on conexio_stratus
+      [00:00:00.250,854] <inf> MQTT: Starting MQTT sample on conexio_stratus_pro
       [00:00:00.250,885] <inf> MQTT: Initializing modem library
       [00:00:00.488,494] <inf> MQTT: Connecting to LTE network
       [00:01:09.398,864] <inf> MQTT: RRC mode: Connected
