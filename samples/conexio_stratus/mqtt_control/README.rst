@@ -36,7 +36,7 @@ Sample Output
 
 .. code-block:: console
 
-      *** Booting nRF Connect SDK v2.5.0 ***
+      *** Booting nRF Connect SDK v3.5.99-ncs1 ***
       [00:00:00.250,854] <inf> MQTT: Starting MQTT sample on conexio_stratus_pro
       [00:00:00.250,885] <inf> MQTT: Initializing modem library
       [00:00:00.488,494] <inf> MQTT: Connecting to LTE network
