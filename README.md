@@ -3,14 +3,14 @@
 <img src="Design/banner.png" style="margin-bottom:10px" />
 
 Here you will find all the Conexio device application examples and associated files to get started with creating and building your first application.
-These devices include Conexio Stratus Pro and Stratus which are global cellular kits and Conexio Blitz which is BLE 5.4 + WiFi-6 kit.
+These devices include nRF9161 based Conexio Stratus Pro and nRF9160 based Stratus which are global cellular kits and Conexio Blitz which is BLE 5.4 + WiFi-6 kit.
 The current sample applications are compatible with nRF Connect SDK (NCS) v2.6.x. 
 
 ## Getting Started
 
 The [Conexio docs](https://docs.conexiotech.com/) are a great place to explore our hardware, firmware, & developer tools, and find all the information you need to build your own connected product with Stratus.
 
-To fetch the Stratus sample applications *Using nRF Connect SDK as a manifest repository*
+To fetch the nRF91 Stratus sample applications *Using nRF Connect SDK as a manifest repository*
 add the following entry to `west.yml` file in `ncs/v2.6.0/nrf` subtree of the existing west-based project:
 
 ```
@@ -55,12 +55,12 @@ v2.6.0/
         </td>  
         <td>
             <img src="Design/getting_started.png" /><br/>
-            Up and Running with ZephyrRTOS on Conexio Stratus Platform <br/>
+            Up and Running with ZephyrRTOS on nRF9160 Conexio Stratus Platform <br/>
             <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> | <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a> | <a href="samples/conexio_stratus/led_blink/">Source Code</a>
         </td>        
         <td>
             <img src="Design/datacake.png"/><br/>
-            Connecting Conexio Stratus to Datacake Platform <br/>
+            Connecting nRF9160 Conexio Stratus to Datacake Platform <br/>
             <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> | <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> | <a href="samples/conexio_stratus/datacake/">Source Code</a>
         </td>       
     </tr>
