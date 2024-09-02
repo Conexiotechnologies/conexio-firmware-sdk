@@ -1,0 +1,7 @@
+board:
+  name: conexio_stratus
+  vendor: conexio
+  socs:
+  - name: nrf9160
+    variants:
+    - name: 'ns'
