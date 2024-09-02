@@ -3,48 +3,18 @@
 <img src="Design/banner.png" style="margin-bottom:10px" />
 
 Here you will find all the Conexio device application examples and associated files to get started with creating and building your first application.
-These devices include nRF9161 based Conexio Stratus Pro and nRF9160 based Stratus which are global cellular kits and Conexio Blitz which is BLE 5.4 + WiFi-6 kit.
-The current sample applications are compatible with nRF Connect SDK (NCS) v2.6.x. 
+These devices include nRF9161 based Conexio Stratus Pro and nRF9160 based Stratus which are global cellular kits.
+The current sample applications are compatible with nRF Connect SDK (NCS) v2.7.x. 
 
 ## Getting Started
 
-The [Conexio docs](https://docs.conexiotech.com/) are a great place to explore our hardware, firmware, & developer tools, and find all the information you need to build your own connected product with Stratus.
+The [Conexio docs](https://docs.conexiotech.com/) are a great place to explore our hardware, firmware, & developer tools, and find all the information you need to install the Conexio firmware SDK, setup the build environment, and build your own connected product with Stratus.
 
 To fetch the nRF91 Stratus sample applications *Using nRF Connect SDK as a manifest repository*
 add the following entry to `west.yml` file in `ncs/v2.6.0/nrf` subtree of the existing west-based project:
 
-```
-# Conexio repository.
-    - name: conexio
-      path: conexio
-      revision: main
-      url: https://github.com/Conexiotechnologies/conexio-firmware-sdk.git
-      import: west-nrf.yml
-```
-Now clone the repository, by issuing the following command:
-
-```
-west update
-```
-
-Your nRF Connect SDK v2.6.0 folder structure should now look like this:
-
-```
-v2.6.0/
-├─ bootloader/
-├─ conexio/ <- stratus samples folder
-├─ mbedtls/
-├─ modules/
-├─ nrf/
-├─ nrfxlib/
-├─ test/
-├─ toolchain/
-├─ tools/
-├─ zephyr/
-
-```
-
-🖱 Click on any of the projects below to go to the full walk-through tutorial or Hackster projects and learn how to build and execute them on your Stratus device.
+🖱 Click on any of the projects below to go to the full walk-through tutorial or Hackster projects and learn how to build and execute them on your Stratus device. Note: some of these samples listed below may not be the latest.
+Refer to the samples folder to get the latest tested and working example applications.
 
 <table>    
     <tr>
