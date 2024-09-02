@@ -10,11 +10,9 @@ The current sample applications are compatible with nRF Connect SDK (NCS) v2.7.x
 
 The [Conexio docs](https://docs.conexiotech.com/) are a great place to explore our hardware, firmware, & developer tools, and find all the information you need to install the Conexio firmware SDK, setup the build environment, and build your own connected product with Stratus.
 
-To fetch the nRF91 Stratus sample applications *Using nRF Connect SDK as a manifest repository*
-add the following entry to `west.yml` file in `ncs/v2.6.0/nrf` subtree of the existing west-based project:
+🖱 Click on any of the projects below to go to the full walk-through tutorial or Hackster projects and learn how to build and execute them on your Stratus device. 
 
-🖱 Click on any of the projects below to go to the full walk-through tutorial or Hackster projects and learn how to build and execute them on your Stratus device. Note: some of these samples listed below may not be the latest.
-Refer to the samples folder to get the latest tested and working example applications.
+Note: some of these samples listed below may not be the latest. Refer to the samples folder to get the latest tested and working example applications.
 
 <table>    
     <tr>
