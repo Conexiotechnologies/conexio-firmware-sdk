@@ -25,7 +25,10 @@
 #include <dk_buttons_and_leds.h>
 #include "certificate.h"
 #include "env_sensors.h"
+
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 #include "fuel_gauge.h"
+#endif
 
 #include <math.h>
 #include <stdlib.h>
@@ -968,12 +971,14 @@ int main(void)
 	work_init();
 	sensors_init();
 
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 	fuel_gauge_initialized = fuel_gauge_init_and_start();
 
 	if (!fuel_gauge_initialized) {
 		LOG_ERR("Fuel gauge init, error: %d", fuel_gauge_initialized);
 		return 0;
 	}
+#endif
 
 do_connect:
 	if (connect_attempt++ > 0) {
