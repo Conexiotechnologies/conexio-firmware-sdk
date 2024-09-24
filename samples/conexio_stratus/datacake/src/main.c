@@ -354,7 +354,11 @@ static void button_handler(uint32_t button_states, uint32_t has_changed)
 		last_reset_reason_info_send();
 		app_version_info_send();
 		modem_rsrp_data_send();
+
+#if defined(CONFIG_ENVIRONMENT_SENSORS)
 		env_data_send();
+#endif /* CONFIG_ENVIRONMENT_SENSORS */
+
 		button_state_info_send();
 
 		k_work_schedule(&cloud_update_work, K_NO_WAIT);
