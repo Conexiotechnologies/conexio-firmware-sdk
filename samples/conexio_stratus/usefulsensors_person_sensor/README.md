@@ -9,14 +9,13 @@ Connect the sensor breakout board to the Conexio Stratus kit using Qwiic connect
 
 Building and Running on conexio_stratus
 ===========================
-To compile te application, execute:
-For Conexio Stratus:
+For the Stratus Pro nrf9151/nRF9161 device, the west build command is: 
 ```
-west build -b conexio_stratus_ns
+west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
 ```
-For Conexio Stratus Pro:
+For the Stratus nRF9160 device, the build command is:
 ```
-west build -b conexio_stratus_pro_ns
+west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
 ```
 
 Flash the compiled firmware using `newtmgr`:

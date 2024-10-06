@@ -20,11 +20,13 @@ topic, the Blue LED on the board is turned ON. When the `LEDOFF` message is sent
 Building and Running
 ********************
 
-To compile the application issue command:
+For the Stratus Pro nrf9151/nRF9161 device, the west build command is: 
 
-   west build -b conexio_stratus_pro_ns (For Stratus Pro)
+   west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
 
-   west build -b conexio_stratus_ns (For GEN 1 Stratus)
+For the Stratus nRF9160 device, the build command is:
+
+   west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
 
 Flash the compiled firmware using `newtmgr` to the Stratus DK
 

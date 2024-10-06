@@ -1,13 +1,13 @@
 .. _boards_nrf_battery:
 
-On-board Battery Voltage Measurement
+On-board Battery Voltage Measurement (Compatible only with Stratus nRF9160 kit)
 ###########################
 
 Overview
 ********
 
 This sample demonstrates using Nordic configurations of the Zephyr ADC
-infrastructure to measure the voltage of the device power supply.  Two
+infrastructure to measure the voltage of the device power supply. Two
 power supply configurations are supported:
 
 * If the board devicetree has a ``/vbatt`` node with compatible
@@ -63,7 +63,9 @@ displaying the battery status every five seconds.
 Building and Running
 ********************
 
-   west build -b conexio_stratus_ns
+For the Stratus nRF9160 device, the build command is:
+
+   west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
 
 Flash the compiled firmware using `newtmgr`
 

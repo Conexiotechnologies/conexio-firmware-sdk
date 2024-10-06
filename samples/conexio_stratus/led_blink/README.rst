@@ -23,15 +23,19 @@ LEDs" on many of Zephyr's `boards`. The LED must be configured using the
 Building and Running
 ********************
 
-Build and flash Blink sample as follows:
+For the Stratus Pro nrf9151/nRF9161 device, the west build command is: 
 
-   west build -b conexio_stratus_pro_ns
+   west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
+
+For the Stratus nRF9160 device, the build command is:
+
+   west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
 
 Flash the compiled firmware using `newtmgr`
 
    newtmgr -c serial image upload build/zephyr/app_update.bin
 
-After flashing the Conexio Stratus board, the onboard LED starts to blink every second.
+After flashing the Conexio Stratus board, the onboard LED should start to blink every second.
 
 Credit
 =============

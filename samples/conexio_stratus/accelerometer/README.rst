@@ -25,7 +25,7 @@ http://www.st.com/en/mems-and-sensors/lis2dh.html.
 Building and Running
 ********************
 
-See the board documentation for detailed instructions on how to flash
+See the `device documentation <https://docs.conexiotech.com/>`_ for detailed instructions on how to flash
 and get access to the console where acceleration data is displayed.
 
 Building on conexio_stratus
@@ -34,7 +34,14 @@ Building on conexio_stratus
 Conexio Stratus DK includes a ST LIS2DH12 accelerometer which
 supports the LIS2DH interface.
 
-   west build -b conexio_stratus_ns
+For the Stratus Pro nrf9151/nRF9161 device, the west build command is: 
+
+   west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
+
+For the Stratus nRF9160 device, the build command is:
+
+   west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
+
 
 Flash the compiled firmware using `newtmgr`
 
@@ -52,3 +59,8 @@ Sample Output
     #3 @ 4022 ms: x -5.349120 , y 5.692992 , z -5.463744
 
    <repeats endlessly every 2 seconds>
+
+
+Credit 
+===============
+Zephyr Project
