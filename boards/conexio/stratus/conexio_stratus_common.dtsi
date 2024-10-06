@@ -123,25 +123,12 @@
 	pinctrl-names = "default", "sleep";
 };
 
-&uart1 {
-	current-speed = <115200>;
-	pinctrl-0 = <&uart1_default>;
-	pinctrl-1 = <&uart1_sleep>;
-	pinctrl-names = "default", "sleep";
-};
-
-&uart2 {
-	pinctrl-0 = <&uart2_default>;
-	pinctrl-1 = <&uart2_sleep>;
-	pinctrl-names = "default", "sleep";
-};
-
-&i2c1 {
+&i2c2 {
 	compatible = "nordic,nrf-twim";
 	status = "okay";
 
-	pinctrl-0 = <&i2c1_default>;
-	pinctrl-1 = <&i2c1_sleep>;
+	pinctrl-0 = <&i2c2_default>;
+	pinctrl-1 = <&i2c2_sleep>;
 	pinctrl-names = "default", "sleep";
 
 	lis2dh: lis2dh@18 {
@@ -172,18 +159,6 @@
 	pinctrl-0 = <&spi3_default>;
 	pinctrl-1 = <&spi3_sleep>;
 	pinctrl-names = "default", "sleep";
-};
-
-&timer0 {
-	status = "okay";
-};
-
-&timer1 {
-	status = "okay";
-};
-
-&timer2 {
-	status = "okay";
 };
 
 &flash0 {
@@ -243,4 +218,3 @@
 
 /* Include partition configuration file */
 #include "conexio_stratus_partition_conf.dtsi"
-
