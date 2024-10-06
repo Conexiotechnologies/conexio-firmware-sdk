@@ -1,0 +1,13 @@
+#
+# Copyright (c) 2024 Conexio Technologies, Inc
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+menu "Empty Template"
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
+
