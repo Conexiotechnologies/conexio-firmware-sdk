@@ -131,9 +131,9 @@
 			compatible = "nordic,npm1300-charger";
 			term-microvolt = <4150000>;
 			term-warm-microvolt = <4000000>;
-			current-microamp = <150000>;
+			current-microamp = <800000>;
 			dischg-limit-microamp = <1000000>;
-			vbus-limit-microamp = <500000>;
+			vbus-limit-microamp = <1000000>;
 			thermistor-ohms = <10000>;
 			thermistor-beta = <3380>;
 			charging-enable;
