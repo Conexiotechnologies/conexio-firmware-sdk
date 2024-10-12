@@ -1,5 +1,4 @@
 #
-# Copyright (c) 2020 Nordic Semiconductor
 # Copyright (c) 2024 Conexio Technologies, Inc
 #
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
@@ -24,3 +23,4 @@ zephyr_library_include_directories(
 # Application sources
 add_subdirectory_ifdef(CONFIG_ENVIRONMENT_SENSORS src/env_sensors)
 add_subdirectory_ifdef(CONFIG_NRF_FUEL_GAUGE src/fuel_gauge)
+add_subdirectory_ifdef(CONFIG_MOTION_SENSOR src/motion_sensor)

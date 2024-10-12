@@ -130,6 +130,28 @@ config MQTT_TLS_PEER_VERIFY
 		Set to 0 for VERIFY_NONE, 1 for VERIFY_OPTIONAL, and 2 for
 		VERIFY_REQUIRED.
 
+menuconfig MOTION_SENSOR
+	bool "Enable motion sensing"
+	default y
+	help
+	  Enables motion sensing with Stratus sensors.
+
+if MOTION_SENSOR
+
+config MQTT_PUB_TOPIC_MOTION_X
+	string "Accel x-axis data"
+	default "0"
+
+config MQTT_PUB_TOPIC_MOTION_Y
+	string "Accel y-axis data"
+	default "0"
+
+config MQTT_PUB_TOPIC_MOTION_Z
+	string "Accel z-axis data"
+	default "0"
+
+endif # MOTION_SENSOR
+
 menuconfig ENVIRONMENT_SENSORS
 	bool "Enable environment sensing"
 	default y

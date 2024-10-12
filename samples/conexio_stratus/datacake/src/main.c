@@ -1,6 +1,5 @@
 /*---------------------------------------------------------------------------*/
 /*
- * Copyright (c) 2020 Nordic Semiconductor ASA
  * Copyright (c) 2024 Conexio Technologies, Inc
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
@@ -28,6 +27,10 @@
 
 #if defined(CONFIG_NRF_FUEL_GAUGE)
 #include "fuel_gauge.h"
+#endif
+
+#if defined(CONFIG_MOTION_SENSOR)
+#include "motion_sensor.h"
 #endif
 
 #include <math.h>
@@ -179,6 +182,7 @@ static void button_state_info_send(void)
 }
 /*---------------------------------------------------------------------------*/
 /* Request battery voltage data and publish to cloud */
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 void battery_vitals_send(void)
 {
 	int err;
@@ -190,7 +194,6 @@ void battery_vitals_send(void)
 
 	char buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE] = {0};
 
-#if defined(CONFIG_NRF_FUEL_GAUGE)
 	/* Update fuel gauge samples before publishing data */
 	fuel_gauge_update();
 
@@ -265,8 +268,8 @@ void battery_vitals_send(void)
 			LOG_ERR("Publishing of TTF data failed: %d", err);
 		}
 	}
-#endif /* CONFIG_NRF_FUEL_GAUGE */
 }
+#endif /* CONFIG_NRF_FUEL_GAUGE */
 /*---------------------------------------------------------------------------*/
 #if defined(CONFIG_ENVIRONMENT_SENSORS)
 /**@brief Get environment data from sensors and send to cloud. */
@@ -311,7 +314,9 @@ static void env_data_send(void)
 		}
 	}
 
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 	battery_vitals_send();
+#endif
 	 
 	return;
 error:
@@ -319,14 +324,84 @@ error:
 }
 #endif /* CONFIG_ENVIRONMENT_SENSORS */
 /*---------------------------------------------------------------------------*/
+#if defined(CONFIG_MOTION_SENSOR)
+/**@brief Get motion data from sensors and send to cloud. */
+static void motion_data_send(void)
+{
+	int err;
+	char buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE] = {0};
+
+	/* Create motion data event */
+	struct motion_data accel_data;
+
+	err = motion_sensor_sample_fetch(&accel_data);
+	
+	if (err) {
+			LOG_ERR("Unable to get motion sample: Err: %i", err);
+	}
+    else {
+		LOG_INF("Motion detected: x: %f y: %f z: %f", 
+			sensor_value_to_double(&accel_data.x), 
+			sensor_value_to_double(&accel_data.y), 
+			sensor_value_to_double(&accel_data.z));
+
+		//pack and send x-axis data
+		snprintk(buf, sizeof(buf),"%f", sensor_value_to_double(&accel_data.x));
+		err = data_publish(&client,
+				MQTT_QOS_1_AT_LEAST_ONCE,
+				CONFIG_MQTT_PUB_TOPIC_MOTION_X,
+				buf,
+				strlen(buf));
+
+		if (err) {
+			goto error;
+		}
+
+		//pack and send y-axis data
+		snprintk(buf, sizeof(buf),"%f", sensor_value_to_double(&accel_data.y));
+		err = data_publish(&client,
+				MQTT_QOS_1_AT_LEAST_ONCE,
+				CONFIG_MQTT_PUB_TOPIC_MOTION_Y,
+				buf,
+				strlen(buf));
+
+		if (err) {
+			goto error;
+		}
+
+		//pack and send z-axis data
+		snprintk(buf, sizeof(buf),"%f", sensor_value_to_double(&accel_data.z));
+		err = data_publish(&client,
+				MQTT_QOS_1_AT_LEAST_ONCE,
+				CONFIG_MQTT_PUB_TOPIC_MOTION_Z,
+				buf,
+				strlen(buf));
+
+		if (err) {
+			goto error;
+		}
+	}
+
+error:
+	LOG_ERR("motion_data_send failed: %d", err);
+}
+#endif /* CONFIG_MOTION_SENSOR */
+/*---------------------------------------------------------------------------*/
 /* Periodically Update the cloud with the device vitals */
 static void cloud_update_work_fn(struct k_work *work)
 {
 	LOG_INF("Sending device vitals to cloud at intervals of %d sec", 
 			CONFIG_CLOUD_MESSAGE_PUBLICATION_INTERVAL);
 
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 	battery_vitals_send();
+#endif
+
 	modem_rsrp_data_send();
+
+#if defined(CONFIG_MOTION_SENSOR)
+	motion_data_send();
+#endif
 
 	k_work_schedule(
 			&cloud_update_work,
@@ -346,6 +421,10 @@ static void sensors_init(void)
 	LOG_INF("Sending environmental data to cloud at intervals of %d sec", 
 			CONFIG_ENVIRONMENT_DATA_SEND_INTERVAL);
 #endif /* CONFIG_ENVIRONMENT_SENSORS */
+
+#if defined(CONFIG_MOTION_SENSOR)
+	motion_sensor_init();
+#endif /* CONFIG_MOTION_SENSOR */
 }
 /*---------------------------------------------------------------------------*/
 /* Publish device data on button press */
@@ -362,8 +441,11 @@ static void button_handler(uint32_t button_states, uint32_t has_changed)
 		env_data_send();
 #endif /* CONFIG_ENVIRONMENT_SENSORS */
 
-		button_state_info_send();
+#if defined(CONFIG_MOTION_SENSOR)
+		motion_data_send();
+#endif /* CONFIG_MOTION_SENSOR */
 
+		button_state_info_send();
 		k_work_schedule(&cloud_update_work, K_NO_WAIT);
 	}
 	else {
@@ -916,7 +998,10 @@ int main(void)
 {
 	int err;
 	uint32_t connect_attempt = 0;
+
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 	bool fuel_gauge_initialized;
+#endif
 
 	LOG_INF("Stratus MQTT Datacake sample started, version: %s", CONFIG_APP_VERSION);
 
