@@ -13,7 +13,6 @@ Building and Running
 
 See the `device documentation <https://docs.conexiotech.com/>`_ for detailed instructions on how to get started.
 
-
 For the Stratus Pro nrf9151/nRF9161 device, the `west` build command is: 
 
    west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk

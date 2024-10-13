@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* Board overlay for interfacing DPS310 sensor via the Stratus shield or I2C Pins 
+ * SDA: 26, SDL: 27, Sensor I2C Address: 0x77
+ */
+
+&i2c2 {
+	DPS310@77 {
+		status = "okay";
+		compatible = "infineon,dps310";
+		reg = <0x77>;
+	};
+};
