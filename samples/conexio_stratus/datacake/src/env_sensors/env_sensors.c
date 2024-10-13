@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2019 Nordic Semiconductor ASA
- * Copyright (c) 2022 Conexio Technologies, Inc.
+ * Copyright (c) 2024 Conexio Technologies, Inc.
  * 
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */

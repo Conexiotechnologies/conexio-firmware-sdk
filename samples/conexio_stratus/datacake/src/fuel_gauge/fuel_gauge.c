@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2023 Nordic Semiconductor ASA
- * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ * Copyright (c) 2024 Conexio Technologies, Inc.
  */
 
 #include <stdlib.h>
