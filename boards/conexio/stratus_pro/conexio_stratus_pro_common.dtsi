@@ -140,12 +140,14 @@
 		};
 		regulators {
 			compatible = "nordic,npm1300-regulator";
-			BUCK1 {
+			/* Main 1.8 V regulator, for VDD_GPIO */
+			reg_1v8: BUCK1 {
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
 				regulator-boot-on;
 			};
-			BUCK2 {
+			/* 3.3 V regulator, for QWIIC and GPS LNA */
+			reg_3v3: BUCK2 {
 				regulator-min-microvolt = <3300000>;
 				regulator-max-microvolt = <3300000>;
 				regulator-boot-on;
