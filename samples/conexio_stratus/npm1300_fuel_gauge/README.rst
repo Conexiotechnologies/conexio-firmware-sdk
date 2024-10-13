@@ -1,10 +1,15 @@
 .. _npm1300_fuel_gauge:
 
-nPM1300: Fuel gauge
+nPM1300: Fuel gauge and Battery charging
 ###################
 
-The Fuel gauge sample demonstrates how to calculate the battery state of charge using the nPM1300 fuel gauge on 
+#. The Fuel gauge sample demonstrates how to calculate the battery state of charge using the nPM1300 fuel gauge on 
 Stratus Pro nrf9151/nRF9161 devices.
+
+#. Disables the NTC on the nPM1300 PMIC as it is not connected on the Stratus Pro device. Not disabling the NTC
+currently prevents battery charging over USB-C. 
+There is a nPM1300 driver bug which prevents charging without NTC and is being addressed now in the upcoming 
+`Zephyr pull request: <https://github.com/zephyrproject-rtos/zephyr/pull/74930#issuecomment-2408694307>`_ .
 
 Requirements
 ************
@@ -46,11 +51,21 @@ If the initialization was successful, the terminal displays the following messag
 
 .. code-block:: console
 
-   *** Booting nRF Connect SDK v3.5.99-ncs1 ***
+   *** Booting nRF Connect SDK v2.7.0-5cb85570ca43 ***
+   *** Using Zephyr OS v3.6.99-100befc70c74 ***
    nPM1300 PMIC sample running on conexio_stratus_pro
    nRF Fuel Gauge version: 0.9.2
    PMIC device init successful
-   V: 3.818, I: 0.000, SoC: 53.56, TTE: 42246056, TTF: nan
+   V: 3.984, I: -0.872, SoC: 0.00, TTE: nan, TTF: nan
+   V: 3.984, I: -0.871, SoC: 0.10, TTE: nan, TTF: nan
+   V: 3.989, I: -0.873, SoC: 0.19, TTE: nan, TTF: nan
+   ...
+   V: 4.052, I: -0.886, SoC: 2.04, TTE: nan, TTF: 4946
+   V: 4.047, I: -0.885, SoC: 2.13, TTE: nan, TTF: 4937
+   V: 4.052, I: -0.886, SoC: 2.22, TTE: nan, TTF: 4928
+   V: 4.052, I: -0.886, SoC: 2.32, TTE: nan, TTF: 4918
+   V: 4.057, I: -0.887, SoC: 2.41, TTE: nan, TTF: 4909
+   V: 4.057, I: -0.887, SoC: 2.51, TTE: nan, TTF: 4898
 
 .. _table::
    :widths: auto
