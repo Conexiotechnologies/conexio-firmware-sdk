@@ -30,9 +30,16 @@ Building and Running
 This project outputs sensor data to the console. It should work with any platform featuring a I2C peripheral
 interface.
 
-   west build -b conexio_stratus_pro_ns  (for Stratus Pro nRF9161)
+See the `device documentation <https://docs.conexiotech.com/>`_ for detailed instructions on how to get started.
 
-   west build -b conexio_stratus_ns  (for Stratus nRF9160)
+For the Stratus Pro nrf9151/nRF9161 device, the `west` build command is: 
+
+   west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
+
+For the Stratus nRF9160 device, the build command is:
+
+   west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v2.7.0/conexio-firmware-sdk
+
 
 Flash the compiled firmware using `newtmgr`
 
@@ -50,3 +57,7 @@ Sample Output
         SHT4X: 23.63 Temp. [C] ; 30.83 RH [%]
 
       <repeats endlessly every 2 seconds>
+
+Credit 
+===============
+Zephyr Project

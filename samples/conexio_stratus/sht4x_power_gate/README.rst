@@ -63,3 +63,7 @@ Sample Output
    SHT4X: Temp: 24.663538 degC; RH: 55.968780 %
 
    <repeats endlessly every 3 seconds>
+
+Credit 
+===============
+Zephyr Project
