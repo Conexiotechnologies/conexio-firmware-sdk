@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* Board overlay for interfacing DPS310 sensor via the Stratus shield or I2C Pins 
+/* Board overlay for interfacing DPS310 sensor via the Stratus nRF9160 shield or I2C Pins 
  * SDA: 26, SDL: 27, Sensor I2C Address: 0x77
  */
 

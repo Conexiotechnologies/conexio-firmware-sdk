@@ -5,7 +5,7 @@
  */
 
 /*
- * Conexio Stratus device overlay configuration for SHT3XD sensor connected to QWIIC port
+ * Conexio Stratus nRF9160 device overlay configuration for SHT3XD sensor connected to I2C port
  *
  */
 &i2c2 {

@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * Stratus Pro nRF9151 device overlay configuration for BME688 sensor connected to QWIIC port
+ *
+ */
+&i2c2 {
+	bme688@76 {
+		compatible = "bosch,bme680";
+		reg = <0x77>;
+		status = "okay";
+	};
+};

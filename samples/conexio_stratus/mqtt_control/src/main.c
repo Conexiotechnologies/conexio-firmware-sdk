@@ -25,7 +25,7 @@ static struct pollfd fds;
 
 static K_SEM_DEFINE(lte_connected, 0, 1);
 
-LOG_MODULE_REGISTER(Lesson4_Exercise1, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(mqtt_app, LOG_LEVEL_INF);
 
 static void lte_handler(const struct lte_lc_evt *const evt)
 {

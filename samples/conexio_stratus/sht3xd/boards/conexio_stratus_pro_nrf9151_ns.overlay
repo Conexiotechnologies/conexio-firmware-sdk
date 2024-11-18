@@ -1,0 +1,18 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * Conexio Stratus Pro nRF9151 device overlay configuration for SHT3XD sensor connected to QWIIC port
+ *
+ */
+&i2c2 {
+	status = "okay";
+	sht3xd@44 {
+		status = "okay";
+		compatible = "sensirion,sht3xd";
+		reg = <0x44>;
+	};
+};

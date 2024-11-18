@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * Example configuration of a BME280.
+ *
+ * Device address is 0x76. Your device may have a different
+ * address; check your device documentation if unsure.
+ * 0x76 - SDO <-> GND
+ * 0x77 - SDO <-> VCC
+ */
+&i2c2 {
+	status = "okay";
+	bme280@76 {
+		compatible = "bosch,bme280";
+		reg = <0x76>;
+		label = "BME280";
+	};
+};
