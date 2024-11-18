@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2024 Conexio Technologies, Inc
- * Copyright (c) 2023 Nordic Semiconductor ASA
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -181,10 +180,10 @@
 	pinctrl-names = "default", "sleep";
 };
 
-&spi3 {
+edge_connector_spi: &spi3 {
 	compatible = "nordic,nrf-spim";
-	status = "okay";
-	cs-gpios = <&gpio0 22 GPIO_ACTIVE_LOW>; /* D22 */
+	status = "disabled";
+	cs-gpios = <&gpio0 17 GPIO_ACTIVE_LOW>; // Used for WiFi CS
 	pinctrl-0 = <&spi3_default>;
 	pinctrl-1 = <&spi3_sleep>;
 	pinctrl-names = "default", "sleep";
