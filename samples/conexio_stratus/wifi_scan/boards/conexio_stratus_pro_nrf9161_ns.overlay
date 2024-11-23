@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* enable nrf7002EB SPI comms */
+&edge_connector_spi {
+	status = "okay";
+
+	nrf700x: nrf7002@0 {
+		compatible = "nordic,nrf700x-spi";
+		reg = <0>;
+		spi-max-frequency = <DT_FREQ_M(8)>;
+
+		/* No separate pin for IOVDD, BUCKEN will handle IOVDD automatically,
+		 * but this entry is for compatibility purposes and to avoid adding a
+		 * special case in the nRF700x driver.
+		 * selects NRF_WIFI_COMBINED_BUCKEN_IOVDD_GPIO in Kconfig.shield
+		 */
+		bucken-gpios = <&gpio0 18 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+		iovdd-ctrl-gpios = <&gpio0 18 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+		host-irq-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+	};
+};
