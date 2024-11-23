@@ -29,7 +29,7 @@ The sample allows you to perform scan based on below profiles.
 
 Using this sample, the Stratus Pro development kit scans available access points in `STA (Station)` mode.
 
-Read more here for [Developing with nRF7002 EB](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/app_dev/device_guides/nrf70/nrf7002eb_dev_guide.html).
+Read more here for [Developing with nRF7002EB](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/app_dev/device_guides/nrf70/nrf7002eb_dev_guide.html).
 
 ## Build Configuration for nRF Connect extension for VSCode 
 
@@ -49,13 +49,13 @@ Follow these steps to successfully build the application.
 
 ### Build Configuration for Stratus Pro nRF9151
 
-![Build Configuration for Stratus Pro nRF9151](assets/stratus_pro_nrf9151_build_configs)
+![Build Configuration for Stratus Pro nRF9151](https://github.com/Conexiotechnologies/conexio-firmware-sdk/blob/main/samples/conexio_stratus/wifi_scan/assets/stratus_pro_nrf9151_build_configs.png)
 
 ### Build Configuration for Stratus Pro nRF9161
-![Build Configuration for Stratus Pro nRF9161](assets/stratus_pro_nrf9161_build_configs)
+![Build Configuration for Stratus Pro nRF9161](https://github.com/Conexiotechnologies/conexio-firmware-sdk/blob/main/samples/conexio_stratus/wifi_scan/assets/stratus_pro_nrf9161_build_configs.png)
 
 
-## Upload and running
+## Uploading and running the application
 
 Once the application is compiled successfully, 
 1. Connect the Stratus Pro device to the PC via USB-C and put it into the DFU mode.
