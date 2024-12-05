@@ -1,0 +1,15 @@
+#
+# Copyright (c) 2024 Conexio Technologies, Inc
+#
+
+menu "Button sample"
+
+config BUTTON_EVENT_BTN_NUM
+	int "The button number"
+	default 1
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
