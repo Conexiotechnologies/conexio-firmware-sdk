@@ -1,4 +1,4 @@
-# Golioth Hello sample
+# Stratus Pro - Golioth Hello sample
 
 ## Overview
 
@@ -7,192 +7,53 @@ publish simple Hello messages.
 
 ## Requirements
 
-* Golioth credentials
+* Golioth SDK pre-installed for NCS v2.9.0
+* Golioth account and credentials
 * Network connectivity
 
-## Building and Running
+### Installing the Golioth Firmware SDK
+
+## Adding the Golioth Firmware SDK to an existing nRF Connect SDK based projects
+Add the following entry to the `ncs/v2.9.0/nrf/west.yml` file of an existing West based project:
+
+```yaml
+# Golioth repository.
+- name: golioth
+  path: modules/lib/golioth-firmware-sdk
+  revision: v0.17.0
+  url: https://github.com/golioth/golioth-firmware-sdk.git
+  submodules: true
+```
+
+> [!WARNING]
+> To ensure that default Kconfig values are propagated correctly, place
+> the golioth entry first in your west manifest.
+
+and clone all repositories by running:
+
+```console
+west update
+```
+
+## Building and Running the sample
+
+To build the application, see the `Conexio device documentation <https://docs.conexiotech.com/master/building-and-programming-an-application/compiling-applications-with-nrf-connect-extension-for-vs-code>`_ for 
+detailed instructions on how to build and flash the application to the Stratus devices.
+
+Flash the compiled firmware using `newtmgr`
+
+  newtmgr -c serial image upload build/zephyr/app_update.bin
 
 ### Authentication specific configuration
 
 #### PSK based auth - Hardcoded
 
 Configure the following Kconfig options based on your Golioth
-credentials:
-
-* GOLIOTH_SAMPLE_PSK_ID - PSK ID of registered device
-* GOLIOTH_SAMPLE_PSK - PSK of registered device
-
-by adding these lines to configuration file (e.g. `prj.conf`):
+credentials by adding these lines to configuration file `prj.conf`:
 
 ```cfg
 CONFIG_GOLIOTH_SAMPLE_PSK_ID="my-psk-id"
 CONFIG_GOLIOTH_SAMPLE_PSK="my-psk"
-```
-
-#### PSK based auth - Runtime
-
-We provide an option for setting Golioth credentials through the Zephyr
-shell. This is based on the Zephyr Settings subsystem.
-
-Enable the settings shell by including the following configuration overlay
-file:
-
-```sh
-$ west build -- -DEXTRA_CONF_FILE=../common/runtime_settings.conf
-```
-
-Alternatively, you can add the following options to ``prj.conf``:
-
-```cfg
-CONFIG_GOLIOTH_SAMPLE_HARDCODED_CREDENTIALS=n
-
-CONFIG_FLASH=y
-CONFIG_FLASH_MAP=y
-CONFIG_NVS=y
-
-CONFIG_SETTINGS=y
-CONFIG_SETTINGS_RUNTIME=y
-CONFIG_GOLIOTH_SAMPLE_SETTINGS=y
-CONFIG_GOLIOTH_SAMPLE_WIFI_SETTINGS=y
-CONFIG_GOLIOTH_SAMPLE_SETTINGS_AUTOLOAD=y
-CONFIG_GOLIOTH_SAMPLE_SETTINGS_SHELL=y
-```
-
-At runtime, configure PSK-ID and PSK using the device shell based on your
-Golioth credentials:
-
-```sh
-uart:~$ settings set golioth/psk-id <my-psk-id@my-project>
-uart:~$ settings set golioth/psk <my-psk>
-uart:-$ kernel reboot cold
-```
-
-#### Certificate based auth
-
-Configure the following Kconfig options based on your Golioth
-credentials:
-
-* CONFIG_GOLIOTH_AUTH_METHOD_CERT - use certificate-based
-    authentication
-* CONFIG_GOLIOTH_SAMPLE_HARDCODED_CRT_PATH - device certificate
-* CONFIG_GOLIOTH_SAMPLE_HARDCODED_KEY_PATH - device private key
-
-by adding these lines to configuration file (e.g. `prj.conf`):
-
-```cfg
-CONFIG_GOLIOTH_AUTH_METHOD_CERT=y
-CONFIG_GOLIOTH_SAMPLE_HARDCODED_CRT_PATH="keys/device.crt.der"
-CONFIG_GOLIOTH_SAMPLE_HARDCODED_KEY_PATH="keys/device.key.der"
-```
-
-### Platform specific configuration
-
-#### QEMU
-
-This application has been built and tested with QEMU x86 (qemu_x86).
-
-On your Linux host computer, open a terminal window, locate the source
-code of this sample application (i.e., `examples/zephyr/hello`) and
-type:
-
-```console
-$ west build -b qemu_x86 examples/zephyr/hello
-$ west build -t run
-```
-
-See [Networking with
-QEMU](https://docs.zephyrproject.org/3.3.0/connectivity/networking/qemu_setup.html)
-on how to setup networking on host and configure NAT/masquerading to
-access Internet.
-
-#### ESP32-DevKitC-WROVER
-
-Configure the following Kconfig options based on your WiFi AP
-credentials:
-
-- GOLIOTH_SAMPLE_WIFI_SSID  - WiFi SSID
-- GOLIOTH_SAMPLE_WIFI_PSK   - WiFi PSK
-
-by adding these lines to configuration file (e.g. `prj.conf`):
-
-```cfg
-CONFIG_GOLIOTH_SAMPLE_WIFI_SSID="my-wifi"
-CONFIG_GOLIOTH_SAMPLE_WIFI_PSK="my-psk"
-```
-
-On your host computer open a terminal window, locate the source code of this
-sample application (i.e., `examples/zephyr/hello`) and type:
-
-```console
-$ west build -b esp32_devkitc_wrover/esp32/procpu examples/zephyr/hello
-$ west flash
-```
-
-#### nRF52840 DK + ESP32-WROOM-32
-
-This subsection documents using nRF52840 DK running Zephyr with
-offloaded ESP-AT WiFi driver and ESP32-WROOM-32 module based board (such
-as ESP32 DevkitC rev. 4) running WiFi stack. See [AT Binary
-Lists](https://docs.espressif.com/projects/esp-at/en/latest/AT_Binary_Lists/index.html)
-for links to ESP-AT binaries and details on how to flash ESP-AT image on
-ESP chip. Flash ESP chip with following command:
-
-```console
-esptool.py write_flash --verify 0x0 PATH_TO_ESP_AT/factory/factory_WROOM-32.bin
-```
-
-Connect nRF52840 DK and ESP32-DevKitC V4 (or other ESP32-WROOM-32 based
-board) using wires:
-
-| nRF52840 DK | ESP32-WROOM-32  | ESP32-WROVER-32 |
-| ----------- | --------------- | ----------------|
-| P1.01 (RX)  | IO17 (TX)       | IO22 (TX)       |
-| P1.02 (TX)  | IO16 (RX)       | IO19 (RX)       |
-| P1.03 (CTS) | IO14 (RTS)      | IO14 (RTS)      |
-| P1.04 (RTS) | IO15 (CTS)      | IO15 (CTS)      |
-| P1.05       | EN              | EN              |
-| GND         | GND             | GND             |
-
-Configure the following Kconfig options based on your WiFi AP
-credentials:
-
-* GOLIOTH_SAMPLE_WIFI_SSID - WiFi SSID
-* GOLIOTH_SAMPLE_WIFI_PSK - WiFi PSK
-
-by adding these lines to configuration file (e.g. `prj.conf` or
-`board/nrf52840dk_nrf52840.conf`):
-
-```cfg
-CONFIG_GOLIOTH_SAMPLE_WIFI_SSID="my-wifi"
-CONFIG_GOLIOTH_SAMPLE_WIFI_PSK="my-psk"
-```
-
-On your host computer open a terminal window, locate the source code of
-this sample application (i.e., `examples/zephyr/hello`) and type:
-
-```console
-$ west build -b nrf52840dk/nrf52840 examples/zephyr/hello
-$ west flash
-```
-
-#### nRF9160 DK
-
-On your host computer open a terminal window, locate the source code of
-this sample application (i.e., `examples/zephyr/hello`) and type:
-
-```console
-$ west build -b nrf9160dk/nrf9160/ns examples/zephyr/hello
-$ west flash
-```
-
-#### RAK5010 (v2 with BG95)
-
-On your host computer open a terminal window. From the
-`golioth-firmware-sdk` folder, type:
-
-```console
-$ west build -b rak5010/nrf52840 examples/zephyr/hello
-$ west flash
 ```
 
 ### Sample output
