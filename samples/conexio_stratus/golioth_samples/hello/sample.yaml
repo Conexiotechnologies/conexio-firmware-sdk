@@ -1,0 +1,69 @@
+sample:
+  description: Say Hello to Golioth server
+  name: hello
+tests:
+  sample.golioth.hello:
+    harness: pytest
+    tags:
+      - golioth
+      - socket
+      - goliothd
+    timeout: 180
+    extra_args: EXTRA_CONF_FILE="../common/runtime_settings.conf"
+    extra_configs:
+      - CONFIG_GOLIOTH_SAMPLE_TWISTER_TEST=y
+      - arch:posix:CONFIG_NATIVE_UART_0_ON_STDINOUT=y
+    platform_allow:
+      - esp32_devkitc_wrover/esp32/procpu
+      - mimxrt1024_evk
+      - native_sim
+      - native_sim/native/64
+      - nrf52840dk/nrf52840
+      - nrf9160dk/nrf9160/ns
+      - rak5010/nrf52840
+  sample.golioth.hello.cid:
+    harness: pytest
+    tags:
+      - golioth
+      - socket
+      - goliothd
+    timeout: 180
+    extra_args: EXTRA_CONF_FILE="../common/runtime_settings.conf"
+    extra_configs:
+      - CONFIG_GOLIOTH_SAMPLE_TWISTER_TEST=y
+      - CONFIG_GOLIOTH_USE_CONNECTION_ID=y
+      - arch:posix:CONFIG_NATIVE_UART_0_ON_STDINOUT=y
+    platform_allow:
+      - esp32_devkitc_wrover/esp32/procpu
+      - mimxrt1024_evk
+      - native_sim
+      - native_sim/native/64
+      - nrf52840dk/nrf52840
+      - nrf9160dk/nrf9160/ns
+      - rak5010/nrf52840
+  sample.golioth.hello.psk:
+    build_only: true
+    platform_allow:
+      - esp32_devkitc_wrover/esp32/procpu
+      - mimxrt1024_evk
+      - native_sim
+      - native_sim/native/64
+      - nrf52840dk/nrf52840
+      - nrf9160dk/nrf9160/ns
+      - rak5010/nrf52840
+      - qemu_x86
+  sample.golioth.hello.cert.buildonly:
+    build_only: true
+    extra_configs:
+      - CONFIG_GOLIOTH_AUTH_METHOD_CERT=y
+      # Make it build by providing path that can be resolved
+      - CONFIG_GOLIOTH_SAMPLE_HARDCODED_CRT_PATH="prj.conf"
+      - CONFIG_GOLIOTH_SAMPLE_HARDCODED_KEY_PATH="prj.conf"
+    platform_allow:
+      - mimxrt1024_evk
+      - native_sim
+      - native_sim/native/64
+      - nrf52840dk/nrf52840
+      - nrf9160dk/nrf9160/ns
+      - rak5010/nrf52840
+      - qemu_x86
