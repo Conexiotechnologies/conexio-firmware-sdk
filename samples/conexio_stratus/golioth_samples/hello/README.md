@@ -37,8 +37,8 @@ west update
 
 ## Building and Running the sample
 
-To build the application, see the `Conexio device documentation <https://docs.conexiotech.com/master/building-and-programming-an-application/compiling-applications-with-nrf-connect-extension-for-vs-code>`_ for 
-detailed instructions on how to build and flash the application to the Stratus devices.
+To build the application, see the [Conexio device documentation](https://docs.conexiotech.com/master/building-and-programming-an-application/compiling-applications-with-nrf-connect-extension-for-vs-code) 
+for detailed instructions on how to build and flash the application to the Stratus devices.
 
 Flash the compiled firmware using `newtmgr`
 
