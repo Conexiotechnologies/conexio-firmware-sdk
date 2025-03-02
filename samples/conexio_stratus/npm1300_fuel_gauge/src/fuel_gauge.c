@@ -15,7 +15,7 @@
 #include "nrf_fuel_gauge.h"
 
 /* nPM1300 CHARGER.BCHGCHARGESTATUS.CONSTANTCURRENT register bitmask */
-#define NPM1300_CHG_STATUS_CC_MASK BIT_MASK(3)
+#define NPM1300_CHG_STATUS_CC_MASK BIT(3)
 
 static float max_charge_current;
 static float term_charge_current;
@@ -80,7 +80,7 @@ int fuel_gauge_init(const struct device *charger)
 	return 0;
 }
 
-int fuel_gauge_update(const struct device *charger)
+int fuel_gauge_update(const struct device *charger, bool vbus_connected)
 {
 	float voltage;
 	float current;
@@ -103,13 +103,12 @@ int fuel_gauge_update(const struct device *charger)
 
 	delta = (float) k_uptime_delta(&ref_time) / 1000.f;
 
-	soc = nrf_fuel_gauge_process(voltage, current, temp, delta, NULL);
+	soc = nrf_fuel_gauge_process(voltage, current, temp, delta, vbus_connected, NULL);
 	tte = nrf_fuel_gauge_tte_get();
 	ttf = nrf_fuel_gauge_ttf_get(cc_charging, -term_charge_current);
 
-	/* Stratus Pro does not have the NTC sensor connected, so dont display */
-	printk("V: %.3f, I: %.3f, ", voltage, current);
-	printk("SoC: %.2f, TTE: %.0f, TTF: %.0f\n", soc, tte, ttf);
+	printk("V: %.3f, I: %.3f, ", (double)voltage, (double)current);
+	printk("SoC: %.2f, TTE: %.0f, TTF: %.0f\n", (double)soc, (double)tte, (double)ttf);
 
 	return 0;
 }

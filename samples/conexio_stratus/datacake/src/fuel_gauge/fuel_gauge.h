@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Conexio Technologies, Inc
+ * Copyright (c) 2025 Conexio Technologies, Inc
  */
 
 #ifndef __FUEL_GAUGE_H__
@@ -17,6 +17,6 @@ extern FuelGaugeData pmic_data;
 
 int fuel_gauge_init_and_start(void);
 
-int fuel_gauge_update(void);
+int fuel_gauge_update(const struct device *charger, bool vbus_connected);
 
 #endif /* __FUEL_GAUGE_H__ */

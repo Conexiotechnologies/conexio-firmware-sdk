@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2019 Nordic Semiconductor ASA
- * Copyright (c) 2024 Conexio Technologies, Inc
+ * Copyright (c) 2025 Conexio Technologies, Inc
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -38,7 +38,7 @@ static void fetch_and_display(const struct device *sensor)
 
 int main(void)
 {
-	printf("Conexio Stratus accelerometer sensor example\n");
+	printf("LIS2DH Accelerometer sensor example for %s\n", CONFIG_BOARD);
 	const struct device *sensor = DEVICE_DT_GET_ANY(st_lis2dh);
 
 	if (sensor == NULL) {
@@ -49,8 +49,6 @@ int main(void)
 		printf("Device %s is not ready\n", sensor->name);
 		return 0;
 	}
-
-	printf("Polling at 0.5 Hz\n");
 
 	while (true) {
 		fetch_and_display(sensor);

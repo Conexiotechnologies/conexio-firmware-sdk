@@ -26,6 +26,7 @@
 #include "env_sensors.h"
 
 #if defined(CONFIG_NRF_FUEL_GAUGE)
+#include <zephyr/drivers/mfd/npm1300.h>
 #include "fuel_gauge.h"
 #endif
 
@@ -41,6 +42,12 @@ LOG_MODULE_REGISTER(mqtt_app, CONFIG_MQTT_DATACAKE_LOG_LEVEL);
 K_SEM_DEFINE(lte_connected, 0, 1);
 
 static struct k_work_delayable cloud_update_work;
+
+#if defined(CONFIG_NRF_FUEL_GAUGE)
+static const struct device *pmic = DEVICE_DT_GET(DT_INST(0, nordic_npm1300));
+static const struct device *charger = DEVICE_DT_GET(DT_NODELABEL(pmic_charger));
+static volatile bool vbus_connected;
+#endif
 
 /*** Device ID ***/
 #define IMEI_LEN 15
@@ -73,6 +80,21 @@ int32_t rsrp_value_latest;
 /* Stack definition for application workqueue */
 K_THREAD_STACK_DEFINE(application_stack_area, CONFIG_APPLICATION_WORKQUEUE_STACK_SIZE);
 static struct k_work_q application_work_q;
+/*---------------------------------------------------------------------------*/
+#if defined(CONFIG_NRF_FUEL_GAUGE)
+static void event_callback(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
+{
+	if (pins & BIT(NPM1300_EVENT_VBUS_DETECTED)) {
+		printk("Vbus connected\n");
+		vbus_connected = true;
+	}
+
+	if (pins & BIT(NPM1300_EVENT_VBUS_REMOVED)) {
+		printk("Vbus removed\n");
+		vbus_connected = false;
+	}
+}
+#endif
 /*---------------------------------------------------------------------------*/
 /* Forward declaration of functions */
 #if defined(CONFIG_ENVIRONMENT_SENSORS)
@@ -195,7 +217,7 @@ void battery_vitals_send(void)
 	char buf[CONFIG_MQTT_PAYLOAD_BUFFER_SIZE] = {0};
 
 	/* Update fuel gauge samples before publishing data */
-	fuel_gauge_update();
+	fuel_gauge_update(charger, vbus_connected);
 
 	bat_voltage = pmic_data.voltage;
 	avg_I_mA = pmic_data.current * 1000;
@@ -204,9 +226,9 @@ void battery_vitals_send(void)
 	ttf = pmic_data.ttf;
 
 	if (bat_voltage != 0) {
-		LOG_INF("Device battery: %.3f V", bat_voltage);
+		LOG_INF("Device battery: %.3f V", (double)bat_voltage);
 		/* Composes a string formatting for the data */
-		snprintf(buf, sizeof(buf),"%.3f", bat_voltage);
+		snprintf(buf, sizeof(buf),"%.3f", (double)bat_voltage);
 		err = data_publish(&client,
 						MQTT_QOS_1_AT_LEAST_ONCE,
 						CONFIG_MQTT_PUB_TOPIC_BAT,
@@ -218,8 +240,8 @@ void battery_vitals_send(void)
 	}
 
 	if (avg_I_mA != 0) {
-		LOG_INF("Avg current: %.3f mA", avg_I_mA);
-		snprintf(buf, sizeof(buf),"%.3f", avg_I_mA);
+		LOG_INF("Avg current: %.3f mA", (double)avg_I_mA);
+		snprintf(buf, sizeof(buf),"%.3f", (double)avg_I_mA);
 		err = data_publish(&client,
 						MQTT_QOS_1_AT_LEAST_ONCE,
 						CONFIG_MQTT_PUB_TOPIC_CURRENT,
@@ -231,8 +253,8 @@ void battery_vitals_send(void)
 	}
 
 	if (SoC != 0) {
-		LOG_INF("SoC: %.2f %%", SoC);
-		snprintf(buf, sizeof(buf),"%.2f", SoC);
+		LOG_INF("SoC: %.2f %%", (double)SoC);
+		snprintf(buf, sizeof(buf),"%.2f", (double)SoC);
 		err = data_publish(&client,
 						MQTT_QOS_1_AT_LEAST_ONCE,
 						CONFIG_MQTT_PUB_TOPIC_SOC,
@@ -244,8 +266,8 @@ void battery_vitals_send(void)
 	}
 
 	if (tte > 0) {
-		LOG_INF("TTE: %.0f sec", tte);
-		snprintf(buf, sizeof(buf),"%.0f", tte);
+		LOG_INF("TTE: %.0f sec", (double)tte);
+		snprintf(buf, sizeof(buf),"%.0f", (double)tte);
 		err = data_publish(&client,
 						MQTT_QOS_1_AT_LEAST_ONCE,
 						CONFIG_MQTT_PUB_TOPIC_TTE,
@@ -257,8 +279,8 @@ void battery_vitals_send(void)
 	}
 
     if (ttf > 0) {
-		LOG_INF("TTF: %.0f sec", ttf);
-		snprintf(buf, sizeof(buf),"%.0f", ttf);
+		LOG_INF("TTF: %.0f sec", (double)ttf);
+		snprintf(buf, sizeof(buf),"%.0f", (double)ttf);
 		err = data_publish(&client,
 						MQTT_QOS_1_AT_LEAST_ONCE,
 						CONFIG_MQTT_PUB_TOPIC_TTF,
@@ -824,6 +846,15 @@ static int fds_init(struct mqtt_client *c)
 }
 /*---------------------------------------------------------------------------*/
 #if CONFIG_MODEM_INFO
+static inline int adjust_rsrp(int input)
+{
+	if (IS_ENABLED(CONFIG_MODEM_DYNAMIC_DATA_CONVERT_RSRP_TO_DBM)) {
+		return RSRP_IDX_TO_DBM(input);
+	}
+
+	return input;
+}
+
 static void modem_rsrp_handler(char rsrp_value)
 {
 	/* RSRP raw values that represent actual signal strength are
@@ -837,7 +868,7 @@ static void modem_rsrp_handler(char rsrp_value)
 	 * This temporarily saves the latest value which are sent to
 	 * the Data module upon a modem data request.
 	 */
-	rsrp_value_latest = rsrp_value;
+	rsrp_value_latest = adjust_rsrp(rsrp_value);
 
 	LOG_DBG("Incoming RSRP status message, RSRP value is %d",
 		rsrp_value_latest);
@@ -852,8 +883,7 @@ static void modem_rsrp_data_send(void)
 	int32_t rsrp_current;
 
 	/* The RSRP value is copied locally to avoid any race condition */
-	/* Take into account the RSRP offset value */
-	rsrp_current = rsrp_value_latest - RSRP_OFFSET_VAL;
+	rsrp_current = rsrp_value_latest;
 
 	LOG_INF("Publishing RSRP: %d", rsrp_current);
     
@@ -916,26 +946,27 @@ static void lte_handler(const struct lte_lc_evt *const evt)
 		printk("PSM parameter update: TAU: %d, Active time: %d\n",
 			evt->psm_cfg.tau, evt->psm_cfg.active_time);
 		break;
-	case LTE_LC_EVT_EDRX_UPDATE: {
-		char log_buf[60];
-		ssize_t len;
-
-		len = snprintf(log_buf, sizeof(log_buf),
-			       "eDRX parameter update: eDRX: %f, PTW: %f\n",
-			       evt->edrx_cfg.edrx, evt->edrx_cfg.ptw);
-		if (len > 0) {
-			printk("%s\n", log_buf);
-		}
+	case LTE_LC_EVT_EDRX_UPDATE:
+		printk("eDRX parameter update: eDRX: %.2f s, PTW: %.2f s\n",
+		       (double)evt->edrx_cfg.edrx, (double)evt->edrx_cfg.ptw);
 		break;
-	}
 	case LTE_LC_EVT_RRC_UPDATE:
 		printk("RRC mode: %s\n",
-			evt->rrc_mode == LTE_LC_RRC_MODE_CONNECTED ?
-			"Connected" : "Idle\n");
+		       evt->rrc_mode == LTE_LC_RRC_MODE_CONNECTED ? "Connected" : "Idle\n");
 		break;
 	case LTE_LC_EVT_CELL_UPDATE:
 		printk("LTE cell changed: Cell ID: %d, Tracking area: %d\n",
 		       evt->cell.id, evt->cell.tac);
+		break;
+	case LTE_LC_EVT_RAI_UPDATE:
+		/* RAI notification is supported by modem firmware releases >= 2.0.2 */
+		printk("RAI configuration update: "
+		       "Cell ID: %d, MCC: %d, MNC: %d, AS-RAI: %d, CP-RAI: %d\n",
+		       evt->rai_cfg.cell_id,
+		       evt->rai_cfg.mcc,
+		       evt->rai_cfg.mnc,
+		       evt->rai_cfg.as_rai,
+		       evt->rai_cfg.cp_rai);
 		break;
 	default:
 		break;
@@ -1057,6 +1088,28 @@ int main(void)
 	sensors_init();
 
 #if defined(CONFIG_NRF_FUEL_GAUGE)
+	static struct gpio_callback event_cb;
+
+	gpio_init_callback(&event_cb, event_callback,
+				   BIT(NPM1300_EVENT_VBUS_DETECTED) |
+				   BIT(NPM1300_EVENT_VBUS_REMOVED));
+
+	err = mfd_npm1300_add_callback(pmic, &event_cb);
+	if (err) {
+		printk("Failed to add pmic callback.\n");
+		return 0;
+	}
+
+	/* Initialise vbus detection status. */
+	struct sensor_value val;
+	int ret = sensor_attr_get(charger, SENSOR_CHAN_CURRENT, SENSOR_ATTR_UPPER_THRESH, &val);
+
+	if (ret < 0) {
+		return false;
+	}
+
+	vbus_connected = (val.val1 != 0) || (val.val2 != 0);
+
 	fuel_gauge_initialized = fuel_gauge_init_and_start();
 
 	if (!fuel_gauge_initialized) {

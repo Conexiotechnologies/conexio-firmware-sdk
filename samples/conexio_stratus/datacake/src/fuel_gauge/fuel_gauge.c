@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Conexio Technologies, Inc.
+ * Copyright (c) 2025 Conexio Technologies, Inc.
  */
 
 #include <stdlib.h>
@@ -12,6 +12,8 @@
 #include <zephyr/sys/util.h>
 #include "nrf_fuel_gauge.h"
 #include "fuel_gauge.h"
+
+#if defined(CONFIG_NRF_FUEL_GAUGE)
 
 static const struct device *charger = DEVICE_DT_GET(DT_NODELABEL(pmic_charger));
 
@@ -91,7 +93,7 @@ void update_pmic_data(float voltage, float current, float soc, float tte, float 
     pmic_data.ttf = ttf;
 }
 
-int fuel_gauge_update(void)
+int fuel_gauge_update(const struct device *charger, bool vbus_connected)
 {
 	float voltage;
 	float current;
@@ -114,13 +116,13 @@ int fuel_gauge_update(void)
 
 	delta = (float) k_uptime_delta(&ref_time) / 1000.f;
 
-	soc = nrf_fuel_gauge_process(voltage, current, temp, delta, NULL);
+	soc = nrf_fuel_gauge_process(voltage, current, temp, delta, vbus_connected, NULL);
 	tte = nrf_fuel_gauge_tte_get();
 	ttf = nrf_fuel_gauge_ttf_get(cc_charging, -term_charge_current);
 
 	/* Stratus Pro does not have the NTC sensor connected, so dont display */
-	printk("V: %.3f, I: %.3f, ", voltage, current);
-	printk("SoC: %.2f, TTE: %.0f, TTF: %.0f\n", soc, tte, ttf);
+	printk("V: %.3f, I: %.3f, ", (double)voltage, (double)current);
+	printk("SoC: %.2f, TTE: %.0f, TTF: %.0f\n", (double)soc, (double)tte, (double)ttf);
 
 	update_pmic_data(voltage, current, soc, tte, ttf);
 
@@ -147,3 +149,5 @@ int fuel_gauge_init_and_start(void)
 
 	return initialized;
 }
+
+#endif /* CONFIG_NRF_FUEL_GAUGE */
