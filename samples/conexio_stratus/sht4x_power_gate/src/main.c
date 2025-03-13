@@ -9,42 +9,92 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/sensor.h>
 #include <stdio.h>
-
 #include <zephyr/drivers/sensor/sht4x.h>
 #include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/mfd/npm1300.h>
+#include <zephyr/drivers/regulator.h>
 
 #if !DT_HAS_COMPAT_STATUS_OKAY(sensirion_sht4x)
 #error "No sensirion,sht4x compatible node found in the device tree"
 #endif
 
-#define SENSOR_PWR DT_ALIAS(power)
-static struct gpio_dt_spec sensor_power = GPIO_DT_SPEC_GET(SENSOR_PWR, gpios);
+static const struct device *buck2 = DEVICE_DT_GET(DT_NODELABEL(reg_3v3));
 
+/* Set the sleep time */
+#define SLEEP_TIME_MS 5000
+
+static int setup_npm1300(void)
+{
+  int err;
+
+  /* Get nPM1300 pmic */
+  static const struct device *pmic = DEVICE_DT_GET(DT_INST(0, nordic_npm1300));
+  if (!pmic)
+  {
+    printf("Failed to get PMIC device\n");
+    return -ENODEV;
+  }
+
+  /* Disable 3.3V BUCK2 if not already disabled */
+  if (regulator_is_enabled(buck2))
+  {
+    err = regulator_disable(buck2);
+    if (err < 0)
+    {
+      printf("Failed to disable buck2: %d", err);
+      return err;
+    }
+  }
+
+  return 0;
+}
 /**
- * @brief Set power gate pin state
+ * @brief Sets 3V3 regulator ON/OFF for QWIIC, LED, and GPS LNA
  *
  * @param state bool state ON or OFF
  * @return none
  */
-static void set_power_gate(bool state){
-	gpio_pin_set_dt(&sensor_power, state);
-	if(state) {
-		k_msleep(1000); //give 1 sec delay
-	}
+static int set_power_gate(bool state)
+{
+    int err = 0;
+
+    if (!buck2) {
+        printf("Buck2 regulator device not found\n");
+        return -ENODEV;
+    }
+
+    if (state) {
+        if (!regulator_is_enabled(buck2)) {
+            err = regulator_enable(buck2);
+            if (err < 0) {
+                printf("Failed to enable buck2: %d\n", err);
+                return err;
+            }
+            k_msleep(500);
+        }
+    } else {
+        if (regulator_is_enabled(buck2)) {
+            err = regulator_disable(buck2);
+            if (err < 0) {
+                printf("Failed to disable buck2: %d\n", err);
+                return err;
+            }
+        }
+    }
+
+    return err;
 }
 
 int main(void)
 {
 	printf("SHT4X sensor sample running on %s\n", CONFIG_BOARD);
-
-	// Configure power pin as output and low
-	gpio_pin_configure_dt(&sensor_power, GPIO_OUTPUT_INACTIVE);
+	setup_npm1300();
 
 	// setup sht4x sensor 
 	const struct device *sht = DEVICE_DT_GET_ANY(sensirion_sht4x);
 	struct sensor_value temp, hum;
 
-	// Turn ON power to the sensor
+	// Turn ON power to the sensor connected to QWIIC port
 	set_power_gate(true);
 
 	if (!device_is_ready(sht)) {
@@ -52,10 +102,11 @@ int main(void)
 		return 0;
 	}
 
-	// Turn OFF power to the sensor
+	// Turn OFF power to the sensor connected to QWIIC port
 	set_power_gate(false);
 
 	while (true) {
+		
 		// Turn ON power to the sensor to fetch a sample
 		set_power_gate(true);
 
@@ -67,11 +118,12 @@ int main(void)
 		sensor_channel_get(sht, SENSOR_CHAN_AMBIENT_TEMP, &temp);
 		sensor_channel_get(sht, SENSOR_CHAN_HUMIDITY, &hum);
 
-		// Turn OFF power to the sensor
+		// Turn OFF power to the sensor connected to QWIIC port
 		set_power_gate(false);
 
 		printf("SHT4X: Temp: %d.%06d degC; RH: %d.%06d %%\n", temp.val1, temp.val2, hum.val1, hum.val2);
 
-		k_sleep(K_MSEC(3000));
+		k_msleep(SLEEP_TIME_MS);
+
 	}
 }
