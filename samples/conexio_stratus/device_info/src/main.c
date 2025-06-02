@@ -13,7 +13,6 @@
 #include <nrf_modem_at.h>
 #include <modem/modem_info.h>
 #include <helpers/nrfx_reset_reason.h>
-
 #include <zephyr/logging/log.h>
 /*---------------------------------------------------------------------------*/
 LOG_MODULE_REGISTER(app, LOG_LEVEL_INF);
@@ -116,6 +115,30 @@ static int modem_data_init(void)
 	return 0;
 }
 /*---------------------------------------------------------------------------*/
+int modem_info_log(void)
+{
+	int err;
+	int battery_voltage;
+	int modem_temp;
+
+	err = modem_info_get_batt_voltage(&battery_voltage);
+	if (err) {
+		LOG_ERR("Modem voltage read failed, err: %d\n", err);
+		return err;
+	}
+	LOG_INF("Modem voltage: %d mV", battery_voltage);
+
+	err = modem_info_get_temperature(&modem_temp);
+	if (err) {
+		LOG_ERR("Modem Temp read failed, err: %d\n", err);
+		return err;
+	}
+	LOG_INF("Modem Temp: %d degC\n", modem_temp);
+
+	return 0;
+}
+
+/*---------------------------------------------------------------------------*/
 int main(void)
 {
 	int err;
@@ -140,6 +163,9 @@ int main(void)
 	}
 #endif /* CONFIG_MODEM_INFO */
 
-
-	return 0;
+	while (true)
+	{
+		modem_info_log();
+		k_sleep(K_SECONDS(5));
+	}
 }

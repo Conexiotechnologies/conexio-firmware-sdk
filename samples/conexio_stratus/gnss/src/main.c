@@ -39,12 +39,6 @@ static int modem_configure(void)
 		return err;
 	}
 
-	err = lte_lc_init();
-	if (err) {
-		LOG_ERR("Failed to initialize LTE Link Controller, error: %d", err);
-		return err;
-	}
-
 	return 0;
 }
 

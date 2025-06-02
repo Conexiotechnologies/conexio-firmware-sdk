@@ -46,10 +46,10 @@ Flash the compiled firmware using `newtmgr` to Conexio Stratus DK
 
    newtmgr -c serial image upload build/zephyr/app_update.bin
 
-Updating the Modem firmware
-=======
+Updating the Modem firmware of Stratus Pro nRF9151 or nRF9161 Series Devices
+********************
 
-After programming the sample to your Stratus development kit, update the full modem firmware by performing the following steps:
+After programming the sample to your Stratus Pro development kit, update the full modem firmware by performing the following steps:
 
 1. Connect the USB cable and power on or reset your Stratus device.
 #. Call the provided `update_modem.py` script from the terminal inside the project folder specifying the COM port, the modem firmware ZIP file, and the UART baud rate shown in the following examples.
@@ -60,11 +60,11 @@ If you do not have `pynrfjprog` library for Python3 installed, first run
 
 If you used the default baud rate of 115200 when building the firmware above then command:
 
-   python3 update_modem.py mfw_nrf9160_1.3.5.zip /dev/tty.SLAB_USBtoUART *115200*
+   python3 update_modem.py mfw_nrf91x1_2.0.2.zip /dev/tty.SLAB_USBtoUART *115200*
 
 If you used the ``-DDTC_OVERLAY_FILE=uart.overlay`` flag with higher baud rate of 1000000:
 
-   python3 update_modem.py mfw_nrf9160_1.3.5.zip /dev/tty.SLAB_USBtoUART  *1000000*
+   python3 update_modem.py mfw_nrf91x1_2.0.2.zip /dev/tty.SLAB_USBtoUART  *1000000*
 
 
 Sample output
