@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2024 Conexio Technologies, Inc
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -19,9 +19,10 @@ int main(void)
 	// Configure gpio pin as output and low
 	gpio_pin_configure_dt(&output_pin, GPIO_OUTPUT_INACTIVE);
 
-	while (true) {
-        gpio_pin_set_dt(&output_pin, 1);
+	while (true)
+	{
+		gpio_pin_set_dt(&output_pin, 1);
 		k_sleep(K_MSEC(2000));
-        gpio_pin_set_dt(&output_pin, 0);
+		gpio_pin_set_dt(&output_pin, 0);
 	}
 }
