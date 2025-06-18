@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+    aliases {
+        gpiopin = &gpioctrl;
+    };
+    gpio_keys {
+        compatible = "gpio-keys";
+        gpioctrl: gpio_ctrl {
+            gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
+        };
+    };
+};
