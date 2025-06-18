@@ -1,0 +1,16 @@
+#
+# Copyright (c) 2025 Conexio Technologies, Inc
+#
+#
+menu "nPM1300 Sample"
+
+config MFD_NPM1300_DISABLE_NTC
+	bool "Enable/disable NTC for charging over USB-C"
+		default y if BOARD_CONEXIO_STRATUS_PRO_NRF9151_NS
+		default y if BOARD_CONEXIO_STRATUS_PRO_NRF9161_NS
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
