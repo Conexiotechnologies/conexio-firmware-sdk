@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Conexio Technologies, Inc
+# Copyright (c) 2026 Conexio Technologies, Inc
 # SPDX-License-Identifier: Apache-2.0
 
 # Enable MPU
@@ -29,4 +29,7 @@ CONFIG_PINCTRL=y
 CONFIG_I2C=y
 CONFIG_REGULATOR=y
 CONFIG_SENSOR=y
-CONFIG_NPM1300_CHARGER=y
+CONFIG_NPM13XX_CHARGER=y
+
+# Disable entropy driver, as it's not yet implemented for nRF9151
+CONFIG_ENTROPY_NRF5_RNG=n

@@ -1,7 +1,0 @@
-sample:
-  name: UDP sample
-  integration_platforms:
-    - conexio_stratus_ns
-    - conexio_stratus_pro_ns
-  platform_allow: conexio_stratus_ns conexio_stratus_pro_ns
-  tags: ci_build

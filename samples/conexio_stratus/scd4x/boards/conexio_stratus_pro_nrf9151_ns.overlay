@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * Stratus Pro nRF9151 device overlay configuration for SCD4x sensor connected to QWIIC port
+ * Yellow = SCL. Green = SDA
+ */
+
+&i2c2 {
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	scd4x: scd4x@62 {
+		status = "okay";
+		compatible = "sensirion,scd41";
+		reg = <0x62>;
+		/* Optional: Set measurement mode (0: normal, 1: low power, 2: single-shot) */
+		mode = <0>;
+	};
+};
+
+

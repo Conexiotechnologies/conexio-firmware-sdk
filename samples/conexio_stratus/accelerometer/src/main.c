@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2019 Nordic Semiconductor ASA
- * Copyright (c) 2025 Conexio Technologies, Inc
+ * Copyright (c) 2026 Conexio Technologies, Inc
  *
  * SPDX-License-Identifier: Apache-2.0
  */

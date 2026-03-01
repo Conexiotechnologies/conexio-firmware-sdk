@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Conexio Technologies, Inc
+# Copyright (c) 2026 Conexio Technologies, Inc
 # SPDX-License-Identifier: Apache-2.0
 
 if(CONFIG_BOARD_CONEXIO_STRATUS_PRO_NRF9161_NS OR CONFIG_BOARD_CONEXIO_STRATUS_PRO_NRF9151_NS)
