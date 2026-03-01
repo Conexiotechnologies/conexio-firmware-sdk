@@ -3,8 +3,8 @@
 <img src="Design/banner.png" style="margin-bottom:10px" />
 
 Here you will find all the Conexio device application examples and associated files to get started with creating and building your first application.
-These devices include nRF9161 based Conexio Stratus Pro and nRF9160 based Stratus which are global cellular kits.
-The current sample applications are compatible with nRF Connect SDK (NCS) v2.7.x. 
+These devices include nRF9151 and nRF9161 based Conexio Stratus Pro, which are global cellular kits.
+The current sample applications are compatible with nRF Connect SDK (NCS) v2.9.x. 
 
 ## Getting Started
 
@@ -63,23 +63,8 @@ This repository is still under development and we have many example applications
 | SHT4x temperature & humidity sensing           | ✅ |
 | Battery monitoring                             | ✅ |
 | DPS310 temperature & pressure sensing          | ✅ |
-| Seeedstudio groove buzzer            			 | ✅ |
 | BME280 environmental sensor                    | ✅ |
 | AT client                    					 | ✅ |
-| nRF cloud client     							 | ✅ |
-| Datacake cloud client  						 | ✅ |
-| Edge Impulse machine learning    				 | ✅ |
-| Golioth firmware over-the-air update  		 | ✅ |
-| Golioth cloud client                         	 | ✅ |
-| Memfault cloud client            				 | ✅ |
-| IoT Creators cloud            				 | ✅ |
-| UsefulSensors Person Sensor                    | ✅ |
-| Watchdog timer            					 | ✅ |
-| GPS                    						 | ✅ |
-| TeraBee level sensing                    		 | ✅ |
-| Cellular based location                        | ⏳ |
-| Asset tracking                         	     | ⏳ |
-| Qubitro cloud client             				 | ⏳ |
 
 
 - ✅ = Ready to use
