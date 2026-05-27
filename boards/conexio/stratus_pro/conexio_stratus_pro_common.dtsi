@@ -153,24 +153,6 @@
 			};
 		};
 	};
-
-	lis2dh: lis2dh@18 {
-		compatible = "st,lis2dh";
-		reg = <0x18>;
-		irq-gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
-		disconnect-sdo-sa0-pull-up;
-	};
-
-	eeprom0: eeprom@50 {
-		/* 24CW160 (16 kbit eeprom) */
-		/* 0x8000 config register not accessible! If required, set size to 64K */
-		compatible = "atmel,at24";
-		reg = <0x50>;
-		size = <DT_SIZE_K(2)>;
-		pagesize = <32>;
-		address-width = <16>;
-		timeout = <5>;
-	};
 };
 
 &pwm0 {
