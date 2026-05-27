@@ -1,7 +1,7 @@
 <div align="center">
 
 [![Twitter: conexiotech](https://img.shields.io/twitter/follow/conexiotech.svg?style=social)](https://twitter.com/conexiotech)
-[![NCS](https://img.shields.io/badge/NCS-v2.9.0-blue?logo=nordicsemiconductor)](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/)
+[![NCS](https://img.shields.io/badge/NCS-v3.2.1-blue?logo=nordicsemiconductor)](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
 [![Target](https://img.shields.io/badge/Target-nRF9151-orange)](https://www.nordicsemi.com/Products/nRF9151)
 
