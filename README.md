@@ -22,19 +22,19 @@ kit built on the Nordic nRF9151 SiP.
 ## 🚀 Getting Started
 
 **1. Install the environment**  
-Follow the [Conexio Documentation](https://docs.conexiotech.com/) to install nRF Connect SDK v2.9.0 and set up the build toolchain.
+Follow the [Conexio Documentation](https://docs.conexiotech.com/) to install nRF Connect SDK v3.2.1 and set up the build toolchain.
 
 **2. Clone this SDK**
 ```bash
 git clone https://github.com/Conexiotechnologies/conexio-firmware-sdk.git \
-    /opt/nordic/ncs/v2.9.0/conexio-firmware-sdk
+    /opt/nordic/ncs/v3.2.1/conexio-firmware-sdk
 ```
 
 **3. Build a sample**
 ```bash
 west build -b conexio_stratus_pro/nrf9151/ns \
     samples/conexio_stratus/<sample_folder> \
-    -- -DBOARD_ROOT=/opt/nordic/ncs/v2.9.0/conexio-firmware-sdk
+    -- -DBOARD_ROOT=/opt/nordic/ncs/v3.2.1/conexio-firmware-sdk
 ```
 
 **4. Flash to the device**
