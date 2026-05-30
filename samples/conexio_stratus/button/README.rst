@@ -14,6 +14,6 @@ Build the sample for the respective Stratus device using the nRF Connect for VSC
 
 Then flash the compiled firmware using `newtmgr`
 
-   newtmgr -c serial image upload build/zephyr/app_update.bin
+   newtmgr -c serial image upload build/button/zephyr/zephyr.signed.bin
 
 After flashing the Conexio Stratus board, reset the board and press the BUTTON/MODE to see the LED blink.

@@ -1,0 +1,18 @@
+#
+# Copyright (c) 2025 Conexio Technologies, Inc
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+menu "nPM1300 LEDs sample"
+
+config NPM_LEDS_BLINK_INTERVAL_MS
+	int "LED blink interval in milliseconds"
+	default 500
+	help
+	  Interval in milliseconds between LED state changes when in host mode.
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu

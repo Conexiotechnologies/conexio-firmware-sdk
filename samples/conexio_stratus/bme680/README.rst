@@ -29,14 +29,21 @@ Building and Running
 
 This project outputs sensor data to the console. It requires a BME680
 sensor. It should work with any platform featuring a I2C peripheral interface.
-It does not work on QEMU.
-In this example below the :ref:`nrf52840dk_nrf52840` board is used.
+
+See the `device documentation <https://docs.conexiotech.com/>`_ for detailed instructions on how to get started.
+
+For the Stratus Pro nrf9151/nRF9161 device, the `west` build command is: 
+
+   west build -b conexio_stratus_pro/nrf9161/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v3.2.1/conexio-firmware-sdk
+
+For the Stratus nRF9160 device, the build command is:
+
+   west build -b conexio_stratus/nrf9160/ns -- -DBOARD_ROOT=/opt/nordic/ncs/v3.2.1/conexio-firmware-sdk
 
 
-.. zephyr-app-commands::
-   :zephyr-app: samples/sensor/bme680
-   :board: nrf52840dk/nrf52840
-   :goals: build flash
+Flash the compiled firmware using `newtmgr`
+
+   newtmgr -c serial image upload build/bme680/zephyr/zephyr.signed.bin
 
 Sample Output
 =============

@@ -1,0 +1,18 @@
+# Copyright (c) 2025 Conexio Technologies, Inc
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+sample:
+  name: nPM1300 LEDs
+
+common:
+  tags: pmic led
+
+tests:
+  samples.npm_leds:
+    platform_allow: conexio_stratus_pro_nrf9151_ns
+    harness: console
+    harness_config:
+      type: multi_line
+      ordered: true
+      regex:
+        - "nPM1300 LED sample running"
+        - "LED.*ON"

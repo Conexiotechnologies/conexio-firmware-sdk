@@ -20,11 +20,43 @@
 #define NPM13XX_CHG_STATUS_CC_MASK       BIT(3)
 #define NPM13XX_CHG_STATUS_CV_MASK       BIT(4)
 
+/* Width of the SoC bar in characters */
+#define SOC_BAR_WIDTH 20
+
 static int64_t ref_time;
 
 static const struct battery_model battery_model = {
 #include "battery_model.inc"
 };
+/**
+ * @brief Print a visual SoC bar to the console.
+ *
+ * Example output at 75%:
+ *   SoC [###############     ] 75.00 %
+ *
+ * @param soc  State of charge as a percentage (0.0 – 100.0).
+ */
+static void print_soc_bar(float soc)
+{
+	/* Clamp to valid range */
+	if (soc < 0.0f) {
+		soc = 0.0f;
+	} else if (soc > 100.0f) {
+		soc = 100.0f;
+	}
+
+	int filled = (int)((soc / 100.0f) * SOC_BAR_WIDTH);
+	int empty  = SOC_BAR_WIDTH - filled;
+
+	printk("SoC [");
+	for (int i = 0; i < filled; i++) {
+		printk("#");
+	}
+	for (int i = 0; i < empty; i++) {
+		printk(" ");
+	}
+	printk("] %.2f %%\n", (double)soc);
+}
 
 static int read_sensors(const struct device *charger, float *voltage, float *current, float *temp,
 			int32_t *chg_status)
@@ -193,6 +225,8 @@ int fuel_gauge_update(const struct device *charger, bool vbus_connected)
 
 	printk("V: %.3f, I: %.3f, T: %.2f, ", (double)voltage, (double)current, (double)temp);
 	printk("SoC: %.2f, TTE: %.0f, TTF: %.0f\n", (double)soc, (double)tte, (double)ttf);
+
+	print_soc_bar(soc);
 
 	return 0;
 }

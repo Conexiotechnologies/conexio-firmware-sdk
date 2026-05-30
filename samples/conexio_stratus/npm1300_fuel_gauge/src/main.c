@@ -1,7 +1,10 @@
 /*
  * Copyright (c) 2023 Nordic Semiconductor ASA
+ * Copyright (c) 2026 Conexio Technologies, Inc
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
+
+#include <stdlib.h>
 
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -9,10 +12,11 @@
 #include <zephyr/drivers/mfd/npm13xx.h>
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/sys/printk.h>
-
 #include "fuel_gauge.h"
 
 #define SLEEP_TIME_MS 1000
+#define NPM1300_CHGR_BASE 0x3
+#define NPM1300_CHGR_OFFSET_DIS_SET 0x06
 
 static const struct device *pmic = DEVICE_DT_GET(DT_INST(0, nordic_npm1300));
 static const struct device *charger = DEVICE_DT_GET(DT_NODELABEL(pmic_charger));
@@ -33,13 +37,22 @@ static void event_callback(const struct device *dev, struct gpio_callback *cb, u
 
 int main(void)
 {
-	int err;
 	printk("nPM1300 PMIC sample running on %s\n", CONFIG_BOARD);
+
+	int err;
 
 	if (!device_is_ready(pmic)) {
 		printk("Pmic device not ready.\n");
 		return 0;
 	}
+
+#ifdef CONFIG_MFD_NPM1300_DISABLE_NTC
+	err = mfd_npm13xx_reg_write(pmic, NPM1300_CHGR_BASE, NPM1300_CHGR_OFFSET_DIS_SET, 2);
+	if (err) {
+		printk("Failed to disable NTC.\n");
+		return err;
+	}
+#endif /* CONFIG_MFD_NPM1300_DISABLE_NTC */
 
 	if (!device_is_ready(charger)) {
 		printk("Charger device not ready.\n");

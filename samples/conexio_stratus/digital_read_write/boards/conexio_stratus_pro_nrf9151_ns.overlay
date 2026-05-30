@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+	aliases {
+		/* P0.18 — digital input (pulled up, active-low logic) */
+		pininput  = &input_gpio;
+		/* P0.24 — digital output */
+		pinoutput = &output_gpio;
+	};
+
+	/*
+	 * Digital input: P0.18
+	 * GPIO_PULL_UP | GPIO_ACTIVE_LOW — pin is logic-high at rest,
+	 * asserts low when connected to GND. Change to GPIO_ACTIVE_HIGH
+	 * if driving from a push-pull source.
+	 */
+	gpio_inputs {
+		compatible = "gpio-keys";
+		input_gpio: input_gpio {
+			gpios = <&gpio0 18 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		};
+	};
+
+	/*
+	 * Digital output: P0.24
+	 * Starts inactive (logic-low). The application drives it high/low
+	 * via gpio_pin_set_dt().
+	 */
+	gpio_outputs {
+		compatible = "gpio-leds";
+		output_gpio: output_gpio {
+			gpios = <&gpio0 24 GPIO_ACTIVE_HIGH>;
+		};
+	};
+};

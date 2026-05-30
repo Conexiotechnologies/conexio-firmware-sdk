@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+ */
+
+/*
+ * Pull up I2C2 lines — required for reliable nPM1300 communication.
+ */
+&i2c2_default {
+	group1 {
+		bias-pull-up;
+	};
+};
+
+/*
+ * Add the nPM1300 LED controller as a child of pmic_main.
+ *
+ * LED modes:
+ *   charging — automatically driven by the charger state machine
+ *   error    — automatically driven by the PMIC error logic
+ *   host     — fully software-controlled via the Zephyr LED API
+ *
+ * LED0: charging indicator (auto)
+ * LED1: error indicator    (auto)
+ * LED2: host / user LED    (software-controlled — used for blinking in main.c)
+ */
+&pmic_main {
+	npm1300_leds: leds {
+		compatible = "nordic,npm1300-led";
+		nordic,led0-mode = "charging";
+		nordic,led1-mode = "error";
+		nordic,led2-mode = "host";
+	};
+};
