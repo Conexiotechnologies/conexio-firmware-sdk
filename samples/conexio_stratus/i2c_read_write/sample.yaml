@@ -1,0 +1,20 @@
+# Copyright (c) 2025 Conexio Technologies, Inc
+# SPDX-License-Identifier: Apache-2.0
+sample:
+  name: I2C Direct Read/Write
+
+common:
+  tags: i2c gpio
+
+tests:
+  samples.i2c_read_write:
+    platform_allow: conexio_stratus_pro_nrf9151_ns
+    harness: console
+    harness_config:
+      type: multi_line
+      ordered: true
+      regex:
+        - "I2C read/write sample"
+        - "I2C bus ready"
+        - "LIS2DH WHO_AM_I.*0x33"
+        - "EEPROM write/read.*PASSED"

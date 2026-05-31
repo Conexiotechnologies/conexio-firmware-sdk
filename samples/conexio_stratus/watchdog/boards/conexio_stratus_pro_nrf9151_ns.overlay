@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc.
+ * Author: Rajeev Piyare <rajeev@conexiotech.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * No overlay changes needed for the watchdog sample.
+ *
+ * The board DTSI (conexio_stratus_pro_common.dtsi) already defines:
+ *   aliases { watchdog0 = &wdt0; };
+ *
+ * The sample accesses the WDT via: DEVICE_DT_GET(DT_ALIAS(watchdog0))
+ *
+ * The mode button is also defined in the board DTSI:
+ *   button0: button_0 { gpios = <&gpio0 31 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; };
+ *   aliases { sw0 = &button0; };
+ */

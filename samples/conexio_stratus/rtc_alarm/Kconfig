@@ -1,0 +1,23 @@
+# Copyright (c) 2025 Conexio Technologies, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+mainmenu "RTC Alarm Sample"
+
+config RTC_DEMO_SYSTEM_OFF
+	bool "Demonstrate wake from system-off via RTC alarm"
+	default n
+	help
+	  When enabled, after the periodic alarm demo completes the system
+	  will configure a 10-second RTC alarm and then call sys_poweroff()
+	  to enter system-off (deepest sleep, all SRAM lost).
+	  The RTC keeps running in system-off and wakes the CPU when the
+	  alarm fires, causing the system to cold-boot.
+
+	  The RTC alarm must be set BEFORE sys_poweroff() is called.
+	  On wake, the application restarts from main() — there is no
+	  resume from sleep; the system performs a full cold boot.
+
+	  Leave disabled (default) to run only the one-shot and periodic
+	  alarm demonstrations.
+
+source "Kconfig.zephyr"

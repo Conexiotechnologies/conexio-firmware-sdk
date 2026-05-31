@@ -1,0 +1,19 @@
+# Copyright (c) 2025 Conexio Technologies, Inc
+# SPDX-License-Identifier: Apache-2.0
+sample:
+  name: SPI Direct Read/Write
+
+common:
+  tags: spi gpio
+
+tests:
+  samples.spi_read_write:
+    platform_allow: conexio_stratus_pro_nrf9151_ns
+    harness: console
+    harness_config:
+      type: multi_line
+      ordered: true
+      regex:
+        - "SPI read/write sample"
+        - "SPI bus ready"
+        - "Loopback.*PASSED"

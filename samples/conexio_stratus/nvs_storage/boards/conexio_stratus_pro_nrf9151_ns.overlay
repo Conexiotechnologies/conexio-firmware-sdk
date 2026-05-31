@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * Point the Zephyr NVS subsystem at the storage_partition defined in the
+ * board DTSI (offset 0xfa000, size 0x6000 = 24 KiB).
+ *
+ * NVS divides the partition into sectors.  Each sector is one flash erase
+ * block.  The nRF9151 internal flash erase block size is 4 KiB (0x1000).
+ * Setting sector_size = 4096 and sector_count = 3 uses 12 KiB — half the
+ * available space — leaving the other 12 KiB as headroom or for future use.
+ *
+ * Minimum viable config: sector_count >= 2 (NVS needs at least 2 sectors
+ * so it can garbage-collect one while keeping data in the other).
+ */
+/ {
+	chosen {
+		zephyr,nvs-flash = &flash0;
+	};
+};
+
+&flash0 {
+	partitions {
+		storage_partition: partition@fa000 {
+			label = "storage";
+			reg = <0x000fa000 0x00006000>;
+		};
+	};
+};

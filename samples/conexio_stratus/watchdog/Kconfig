@@ -1,0 +1,18 @@
+# Copyright (c) 2025 Conexio Technologies, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+mainmenu "Watchdog Sample"
+
+config WDT_DEMO_TRIGGER_RESET
+	bool "Trigger watchdog reset after 5 feeds"
+	default n
+	help
+	  When enabled, the watchdog feed loop deliberately stops feeding
+	  after 5 iterations (10 seconds), causing the watchdog to expire
+	  and reset the system. Useful for demonstrating that the WDT
+	  actually resets the SoC when the application hangs.
+
+	  Leave disabled (default) for normal operation where the watchdog
+	  is fed indefinitely.
+
+source "Kconfig.zephyr"

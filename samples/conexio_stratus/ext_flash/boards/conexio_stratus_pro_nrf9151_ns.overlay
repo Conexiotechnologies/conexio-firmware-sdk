@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2026 Conexio Technologies, Inc.
+ * Author: Rajeev Piyare <rajeev@conexiotech.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Board overlay for Conexio Stratus Pro (nRF9151, Non-Secure).
+ *
+ * Declares the Microchip 24CW160 EEPROM as a child of i2c2.
+ * i2c2 is already enabled in the board DTSI (SDA=P0.08, SCL=P0.07, 400 kHz).
+ *
+ * This node is required by DEVICE_DT_GET(DT_NODELABEL(eeprom0)) in main.c.
+ */
+
+&i2c2 {
+	eeprom0: eeprom@50 {
+		/* Microchip 24CW160 — 2 KiB (16 kbit) I2C EEPROM */
+		compatible = "atmel,at24";
+		reg = <0x50>;
+		size = <DT_SIZE_K(2)>;
+		pagesize = <32>;
+		address-width = <16>;
+		timeout = <5>;
+	};
+};

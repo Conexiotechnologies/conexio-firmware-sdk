@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * Enable the SPI3 bus on the Stratus header connector.
+ *
+ * Pin mapping (nRF9151 → Stratus header):
+ *   SCK  = P0.13  → D19/SCK
+ *   MOSI = P0.14  → D20/MISO  (note: header label reflects signal direction
+ *   MISO = P0.15  → D21/MOSI   from device perspective)
+ *   CS   = P0.17  → D22/CS
+ *
+ * The CS line is driven by the nRF SPIM hardware via the cs-gpios property.
+ * It is asserted low before each transaction and released after (active-low).
+ *
+ * To connect an external SPI device:
+ *   1. Wire it to the D19/D20/D21/D22 pins on the Stratus header.
+ *   2. Update `spi_max_frequency` below to match your device's maximum clock.
+ *   3. Adjust `spi-cpol`, `spi-cpha` to match your device's SPI mode.
+ */
+
+&spi3 {
+	status = "okay";
+
+	/*
+	 * Generic SPI device node — represents whatever device is connected
+	 * to the header. `reg = <0>` maps to the first CS line (cs-gpios[0]).
+	 *
+	 * Change `spi_max_frequency`, `spi-cpol`, and `spi-cpha` to match
+	 * your target device's datasheet.
+	 *
+	 * Common SPI modes:
+	 *   Mode 0: CPOL=0, CPHA=0  (most sensors, e.g. LIS3DH, BME280)
+	 *   Mode 1: CPOL=0, CPHA=1
+	 *   Mode 2: CPOL=1, CPHA=0
+	 *   Mode 3: CPOL=1, CPHA=1  (some flash chips)
+	 */
+	spi_dev0: spi-device@0 {
+		compatible = "vnd,spi-device";
+		reg = <0>;
+		spi-max-frequency = <1000000>;  /* 1 MHz — safe default */
+	};
+};

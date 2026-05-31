@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc.
+ * Author: Rajeev Piyare <rajeev@conexiotech.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
+ * ADC channel configuration for Conexio Stratus Pro (nRF9151).
+ *
+ * The board DTSI already enables &adc { status = "okay"; }.
+ * Here we add the channel node and a zephyr,user node that
+ * binds the io-channel so the DT-based ADC API can find it.
+ *
+ * Analog input:
+ *   NRF_SAADC_AIN0 → P0.13 → stratus_header D13/A0
+ *
+ * Gain:       ADC_GAIN_1_6
+ * Reference:  ADC_REF_INTERNAL (0.6 V)
+ * Full-scale: 0.6 V × 6 = 3.6 V  (covers the 0–3.3 V header range)
+ */
+
+#include <zephyr/dt-bindings/adc/nrf-saadc.h>
+
+&adc {
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    channel@0 {
+        reg = <0>;
+        zephyr,gain = "ADC_GAIN_1_6";
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN0>; /* P0.13, header D13/A0 */
+        zephyr,resolution = <12>;
+        /* oversampling disabled — SW averaging is done in application code */
+    };
+};
+
+/ {
+    zephyr,user {
+        io-channels = <&adc 0>;
+        io-channel-names = "A0";
+    };
+};

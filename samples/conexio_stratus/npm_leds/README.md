@@ -65,7 +65,7 @@ You can override this in `prj.conf` or on the west build command line.
 
 - Conexio Stratus Pro board with nRF9151 SoC
 - nPM1300 PMIC (on-board, connected via I2C2 at address `0x6B`)
-- nRF Connect SDK v2.9.0
+- nRF Connect SDK v3.2.1
 
 ---
 

@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc.
+ * Author: Rajeev Piyare <rajeev@conexiotech.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Enable RTC0 as the alarm counter source.
+ *
+ * RTC assignment on nRF9151:
+ *   RTC0 — available for application use  ← this sample uses RTC0
+ *   RTC1 — used by the Zephyr kernel system clock (NRF_RTC_TIMER)
+ *
+ * Note: the nRF91 series only has RTC0 and RTC1 (no RTC2 like nRF52/53).
+ *
+ * The counter API abstracts the RTC; the sample accesses it via:
+ *   DEVICE_DT_GET(DT_NODELABEL(rtc0))
+ */
+
+&rtc0 {
+    status = "okay";
+};

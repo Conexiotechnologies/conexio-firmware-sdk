@@ -1,0 +1,25 @@
+#
+# Copyright (c) 2025 Conexio Technologies, Inc
+#
+# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
+#
+menu "External EEPROM sample"
+
+config EEPROM_TEST_OFFSET
+	int "EEPROM write/read test offset (bytes)"
+	default 0
+	help
+	  Byte offset within the EEPROM where the test pattern is written.
+
+config EEPROM_TEST_PATTERN_SIZE
+	int "Number of test pattern bytes to write/read"
+	default 32
+	help
+	  Number of bytes in the test pattern written to and read back from
+	  the EEPROM. Must not exceed the EEPROM size minus the test offset.
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu

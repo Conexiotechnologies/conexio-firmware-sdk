@@ -1,0 +1,18 @@
+/*
+ * Copyright (c) 2025 Conexio Technologies, Inc.
+ * Author: Rajeev Piyare <rajeev@conexiotech.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Board overlay for Conexio Stratus Pro (nRF9151 NS)
+ * Confirms LED and button aliases used in this sample.
+ * led0  -> gpio0 pin 25, GPIO_ACTIVE_HIGH
+ * sw0   -> gpio0 pin 31, GPIO_PULL_UP | GPIO_ACTIVE_LOW
+ */
+
+/ {
+	aliases {
+		led0 = &led0;
+		sw0  = &button0;
+	};
+};
