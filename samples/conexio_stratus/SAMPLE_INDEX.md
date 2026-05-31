@@ -129,7 +129,7 @@ you can copy and adapt for your own application.
 # Build (replace <folder> and <project> with the sample names above)
 west build -b conexio_stratus_pro/nrf9151/ns \
     samples/conexio_stratus/<folder> \
-    -- -DBOARD_ROOT=/opt/nordic/ncs/v2.9.0/conexio-firmware-sdk
+    -- -DBOARD_ROOT=/opt/nordic/ncs/v3.2.1/conexio-firmware-sdk
 
 # Flash
 newtmgr -c serial image upload \

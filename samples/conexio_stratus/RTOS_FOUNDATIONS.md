@@ -23,7 +23,7 @@ Build command for all three (swap folder name):
 ```bash
 west build -b conexio_stratus_pro/nrf9151/ns \
     samples/conexio_stratus/<folder> \
-    -- -DBOARD_ROOT=/opt/nordic/ncs/v2.9.0/conexio-firmware-sdk
+    -- -DBOARD_ROOT=/opt/nordic/ncs/v3.2.1/conexio-firmware-sdk
 ```
 
 Flash:
