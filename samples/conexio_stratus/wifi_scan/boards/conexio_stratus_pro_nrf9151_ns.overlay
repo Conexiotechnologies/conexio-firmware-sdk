@@ -5,6 +5,10 @@
  */
 
 /* enable nrf7002EB SPI comms */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &edge_connector_spi {
 	status = "okay";
 

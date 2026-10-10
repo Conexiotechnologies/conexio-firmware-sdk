@@ -8,6 +8,10 @@
  * Conexio Stratus nRF9160 device overlay configuration for SHT3XD sensor connected to I2C port
  *
  */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	status = "okay";
 	sht3xd@44 {

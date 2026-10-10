@@ -16,6 +16,10 @@
  *   DEVICE_DT_GET(DT_NODELABEL(rtc0))
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &rtc0 {
     status = "okay";
 };

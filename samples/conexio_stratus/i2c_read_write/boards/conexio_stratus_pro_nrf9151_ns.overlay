@@ -13,6 +13,10 @@
  * These nodes are required by I2C_DT_SPEC_GET(DT_NODELABEL(...)) in main.c.
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	lis2dh: lis2dh@18 {
 		compatible = "st,lis2dh";

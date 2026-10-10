@@ -8,6 +8,10 @@
  * Stratus Pro nRF9151 device overlay configuration for BME688 sensor connected to QWIIC port
  *
  */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	bme688@76 {
 		compatible = "bosch,bme680";

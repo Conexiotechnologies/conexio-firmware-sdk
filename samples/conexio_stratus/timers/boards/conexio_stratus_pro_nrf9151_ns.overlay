@@ -10,6 +10,10 @@
  * sw0   -> gpio0 pin 31, GPIO_PULL_UP | GPIO_ACTIVE_LOW
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 / {
 	aliases {
 		led0 = &led0;

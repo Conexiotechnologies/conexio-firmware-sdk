@@ -20,6 +20,10 @@
  * Full-scale: 0.6 V × 6 = 3.6 V  (covers the 0–3.3 V header range)
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 #include <zephyr/dt-bindings/adc/nrf-saadc.h>
 
 &adc {

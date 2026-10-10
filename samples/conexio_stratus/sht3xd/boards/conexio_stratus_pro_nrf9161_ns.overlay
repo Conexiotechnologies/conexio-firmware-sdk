@@ -8,6 +8,10 @@
  * Conexio Stratus Pro nRF9161 device overlay configuration for SHT3XD sensor connected to QWIIC port
  *
  */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	status = "okay";
 	sht3xd@44 {

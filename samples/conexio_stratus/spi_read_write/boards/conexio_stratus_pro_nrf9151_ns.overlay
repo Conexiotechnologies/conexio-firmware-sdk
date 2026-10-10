@@ -22,6 +22,10 @@
  *   3. Adjust `spi-cpol`, `spi-cpha` to match your device's SPI mode.
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &spi3 {
 	status = "okay";
 

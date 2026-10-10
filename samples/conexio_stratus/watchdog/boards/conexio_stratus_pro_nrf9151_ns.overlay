@@ -15,3 +15,7 @@
  *   button0: button_0 { gpios = <&gpio0 31 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; };
  *   aliases { sw0 = &button0; };
  */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+

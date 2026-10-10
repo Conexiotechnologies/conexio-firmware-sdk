@@ -8,6 +8,10 @@
  * SDA: 26, SDL: 27, Sensor I2C Address: 0x77
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	DPS310@77 {
 		status = "okay";

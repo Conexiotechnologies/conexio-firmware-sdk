@@ -8,6 +8,10 @@
  * Stratus Pro nRF9151 device overlay configuration for SHT4x sensor connected to QWIIC port
  *
  */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	status = "okay";
 	clock-frequency = <I2C_BITRATE_FAST>;

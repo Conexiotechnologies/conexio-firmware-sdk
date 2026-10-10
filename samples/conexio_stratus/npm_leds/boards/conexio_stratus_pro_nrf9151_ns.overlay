@@ -7,6 +7,10 @@
 /*
  * Pull up I2C2 lines — required for reliable nPM1300 communication.
  */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2_default {
 	group1 {
 		bias-pull-up;

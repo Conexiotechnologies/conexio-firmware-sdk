@@ -12,6 +12,10 @@
  * This node is required by DEVICE_DT_GET(DT_NODELABEL(eeprom0)) in main.c.
  */
 
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+#include <samples/cellular/nrf91_sram_partitions.dtsi>
+
 &i2c2 {
 	eeprom0: eeprom@50 {
 		/* Microchip 24CW160 — 2 KiB (16 kbit) I2C EEPROM */
