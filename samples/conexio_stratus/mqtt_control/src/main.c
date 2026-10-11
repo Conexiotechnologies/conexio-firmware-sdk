@@ -9,6 +9,8 @@
 #include <ncs_version.h>
 #include <zephyr/kernel.h>
 #include <zephyr/net/socket.h>
+#include <netdb.h>
+#include <poll.h>
 
 #include <zephyr/logging/log.h>
 #include <dk_buttons_and_leds.h>
@@ -185,7 +187,7 @@ do_connect:
 
 	LOG_INF("Disconnecting MQTT client");
 
-	err = mqtt_disconnect(&client);
+	err = mqtt_disconnect(&client, NULL);
 	if (err) {
 		LOG_ERR("Could not disconnect MQTT client: %d", err);
 	}

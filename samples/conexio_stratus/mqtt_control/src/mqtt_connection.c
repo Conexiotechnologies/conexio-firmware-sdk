@@ -5,6 +5,9 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/kernel.h>
 #include <zephyr/net/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <poll.h>
 #include <zephyr/net/mqtt.h>
 #include <nrf_modem_at.h>
 
@@ -187,7 +190,7 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 			LOG_ERR("get_received_payload failed: %d", err);
 			LOG_INF("Disconnecting MQTT client...");
 
-			err = mqtt_disconnect(c);
+			err = mqtt_disconnect(c, NULL);
 			if (err) {
 				LOG_ERR("Could not disconnect: %d", err);
 			}

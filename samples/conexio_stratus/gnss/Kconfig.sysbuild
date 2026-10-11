@@ -1,0 +1,10 @@
+#
+# Copyright (c) 2024 Conexio Technologies, Inc
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+config PARTITION_MANAGER
+	default n
+
+source "share/sysbuild/Kconfig"

@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <zephyr/drivers/sensor/sht4x.h>
 #include <zephyr/drivers/gpio.h>
-#include <zephyr/drivers/mfd/npm1300.h>
+#include <zephyr/drivers/mfd/npm13xx.h>
 #include <zephyr/drivers/regulator.h>
 
 #if !DT_HAS_COMPAT_STATUS_OKAY(sensirion_sht4x)

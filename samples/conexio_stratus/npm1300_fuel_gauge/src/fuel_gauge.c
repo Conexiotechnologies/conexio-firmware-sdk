@@ -1,9 +1,11 @@
 /*
+ * Copyright (c) 2024 Conexio Technologies, Inc
  * Copyright (c) 2023 Nordic Semiconductor ASA
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
 #include <stdlib.h>
+#include <math.h>
 
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
@@ -28,6 +30,7 @@ static int64_t ref_time;
 static const struct battery_model battery_model = {
 #include "battery_model.inc"
 };
+
 /**
  * @brief Print a visual SoC bar to the console.
  *
@@ -38,7 +41,6 @@ static const struct battery_model battery_model = {
  */
 static void print_soc_bar(float soc)
 {
-	/* Clamp to valid range */
 	if (soc < 0.0f) {
 		soc = 0.0f;
 	} else if (soc > 100.0f) {
@@ -96,7 +98,10 @@ static int charge_status_inform(int32_t chg_status)
 		state_info.charge_state = NRF_FUEL_GAUGE_CHARGE_STATE_TRICKLE;
 	} else if (chg_status & NPM13XX_CHG_STATUS_CC_MASK) {
 		printk("Constant current charging\n");
-		state_info.charge_state = NRF_FUEL_GAUGE_CHARGE_STATE_CC;
+		/* Using NRF_FUEL_GAUGE_CHARGE_STATE_CC_LIMITED instead of
+		 * NRF_FUEL_GAUGE_CHARGE_STATE_CC because the charge current may be limited.
+		 */
+		state_info.charge_state = NRF_FUEL_GAUGE_CHARGE_STATE_CC_LIMITED;
 	} else if (chg_status & NPM13XX_CHG_STATUS_CV_MASK) {
 		printk("Constant voltage charging\n");
 		state_info.charge_state = NRF_FUEL_GAUGE_CHARGE_STATE_CV;
@@ -112,11 +117,8 @@ static int charge_status_inform(int32_t chg_status)
 int fuel_gauge_init(const struct device *charger)
 {
 	struct sensor_value value;
-	struct nrf_fuel_gauge_init_parameters parameters = {
-		.model = &battery_model,
-		.opt_params = NULL,
-		.state = NULL,
-	};
+	struct nrf_fuel_gauge_init_parameters parameters =
+		NRF_FUEL_GAUGE_DEFAULT_INIT_PARAMETERS_SECONDARY(0.0f, 0.0f, 0.0f, &battery_model);
 	float max_charge_current;
 	float term_charge_current;
 	int32_t chg_status;
@@ -128,12 +130,13 @@ int fuel_gauge_init(const struct device *charger)
 	if (ret < 0) {
 		return ret;
 	}
-	/* Zephyr sensor API convention for Gauge current is negative=discharging,
-	 * while nrf_fuel_gauge lib expects the opposite negative=charging
+
+	/* Zephyr sensor API convention: negative = discharging.
+	 * nrf_fuel_gauge expects the opposite: negative = charging.
 	 */
 	parameters.i0 = -parameters.i0;
 
-	/* Store charge nominal and termination current, needed for ttf calculation */
+	/* Store charge nominal and termination current, needed for TTF calculation. */
 	sensor_channel_get(charger, SENSOR_CHAN_GAUGE_DESIRED_CHARGING_CURRENT, &value);
 	max_charge_current = (float)value.val1 + ((float)value.val2 / 1000000);
 	term_charge_current = max_charge_current / 10.f;
@@ -175,10 +178,12 @@ int fuel_gauge_update(const struct device *charger, bool vbus_connected)
 {
 	static int32_t chg_status_prev;
 
+	struct nrf_fuel_gauge_state_info state_info;
 	float voltage;
 	float current;
 	float temp;
 	float soc;
+	float soh;
 	float tte;
 	float ttf;
 	float delta;
@@ -190,10 +195,6 @@ int fuel_gauge_update(const struct device *charger, bool vbus_connected)
 		printk("Error: Could not read from charger device\n");
 		return ret;
 	}
-	/* Zephyr sensor API convention for Gauge current is negative=discharging,
-	 * while nrf_fuel_gauge lib expects the opposite negative=charging
-	 */
-	current = -current;
 
 	ret = nrf_fuel_gauge_ext_state_update(
 		vbus_connected ? NRF_FUEL_GAUGE_EXT_STATE_INFO_VBUS_CONNECTED
@@ -216,15 +217,41 @@ int fuel_gauge_update(const struct device *charger, bool vbus_connected)
 
 	delta = (float)k_uptime_delta(&ref_time) / 1000.f;
 
-	/* Zephyr sensor API convention for Gauge current is negative=discharging,
-	 * while nrf_fuel_gauge lib expects the opposite negative=charging
+	/* Zephyr sensor API convention: negative = discharging.
+	 * nrf_fuel_gauge expects the opposite: negative = charging.
 	 */
-	soc = nrf_fuel_gauge_process(voltage, -current, temp, delta, NULL);
-	tte = nrf_fuel_gauge_tte_get();
-	ttf = nrf_fuel_gauge_ttf_get();
+	current = -current;
 
-	printk("V: %.3f, I: %.3f, T: %.2f, ", (double)voltage, (double)current, (double)temp);
-	printk("SoC: %.2f, TTE: %.0f, TTF: %.0f\n", (double)soc, (double)tte, (double)ttf);
+	ret = nrf_fuel_gauge_process(voltage, current, temp, delta, &soc, &state_info);
+	if (ret < 0) {
+		printk("Error: Fuel gauge process failed\n");
+		return ret;
+	}
+
+	ret = nrf_fuel_gauge_soh_get(&soh);
+	if (ret < 0) {
+		printk("Error: Could not get SoH\n");
+	}
+
+	if (current >= 0.0f) {
+		/* Discharging — get time-to-empty */
+		ret = nrf_fuel_gauge_tte_get(&tte);
+		if (ret < 0) {
+			printk("Error: Could not get TTE\n");
+		}
+		ttf = NAN;
+	} else {
+		/* Charging — get time-to-full */
+		ret = nrf_fuel_gauge_ttf_get(&ttf);
+		if (ret < 0) {
+			printk("Error: Could not get TTF\n");
+		}
+		tte = NAN;
+	}
+
+	printk("V: %.3f, I: %.3f, T: %.2f, SoC: %.2f, TTE: %.0f, TTF: %.0f, SoH: %.2f\n",
+	       (double)voltage, (double)current, (double)temp, (double)soc,
+	       (double)tte, (double)ttf, (double)soh);
 
 	print_soc_bar(soc);
 

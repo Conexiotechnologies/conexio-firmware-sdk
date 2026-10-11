@@ -1,0 +1,9 @@
+/*
+ * Copyright (c) 2024 Conexio Technologies, Inc
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+
+#include <samples/cellular/nrf91_sram_partitions.dtsi>

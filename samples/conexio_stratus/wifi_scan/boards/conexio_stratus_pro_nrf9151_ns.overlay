@@ -4,26 +4,48 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* enable nrf7002EB SPI comms */
-
-#include <samples/cellular/nrf91_bootloader_partitions.dtsi>
+/* wifi_scan uses no-bootloader layout (scan-only firmware, no MCUboot) */
+#include <samples/cellular/nrf91_no_bootloader_partitions.dtsi>
 #include <samples/cellular/nrf91_sram_partitions.dtsi>
+
+/ {
+	chosen {
+		zephyr,wifi = &wlan0;
+	};
+};
 
 &edge_connector_spi {
 	status = "okay";
 
-	nrf700x: nrf7002@0 {
-		compatible = "nordic,nrf700x-spi";
+	nrf70: nrf7002@0 {
+		compatible = "nordic,nrf7002-spi";
+		status = "okay";
 		reg = <0>;
 		spi-max-frequency = <DT_FREQ_M(8)>;
 
-		/* No separate pin for IOVDD, BUCKEN will handle IOVDD automatically,
-		 * but this entry is for compatibility purposes and to avoid adding a
-		 * special case in the nRF700x driver.
-		 * selects NRF_WIFI_COMBINED_BUCKEN_IOVDD_GPIO in Kconfig.shield
+		/* BUCKEN and IOVDD share the same GPIO on Stratus Pro.
+		 * NRF_WIFI_COMBINED_BUCKEN_IOVDD_GPIO is selected automatically.
 		 */
-		bucken-gpios = <&gpio0 18 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+		bucken-gpios     = <&gpio0 18 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
 		iovdd-ctrl-gpios = <&gpio0 18 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
-		host-irq-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+		host-irq-gpios   = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+
+		wlan0: wlan0 {
+			compatible = "nordic,wlan";
+		};
+		wlan1: wlan1 {
+			compatible = "nordic,wlan";
+		};
+
+		/* nRF7002 max TX power limits (dBm) — values from nRF7002EB reference */
+		wifi-max-tx-pwr-2g-dsss      = <21>;
+		wifi-max-tx-pwr-2g-mcs0      = <16>;
+		wifi-max-tx-pwr-2g-mcs7      = <16>;
+		wifi-max-tx-pwr-5g-low-mcs0  = <13>;
+		wifi-max-tx-pwr-5g-low-mcs7  = <13>;
+		wifi-max-tx-pwr-5g-mid-mcs0  = <13>;
+		wifi-max-tx-pwr-5g-mid-mcs7  = <13>;
+		wifi-max-tx-pwr-5g-high-mcs0 = <12>;
+		wifi-max-tx-pwr-5g-high-mcs7 = <12>;
 	};
 };
