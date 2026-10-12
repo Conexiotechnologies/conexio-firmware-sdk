@@ -1,6 +1,6 @@
 # CONEXIO STRATUS PRO board configuration
 
-# Copyright (c) 2024 Conexio Technologies, Inc
+# Copyright (c) 2026 Conexio Technologies, Inc
 # SPDX-License-Identifier: Apache-2.0
 
 # For the secure version of the board the firmware is linked at the beginning
@@ -13,6 +13,12 @@
 # Apply this configuration below by setting the Kconfig symbols used by
 # the linker according to the information extracted from DT partitions.
 
+if BOARD_CONEXIO_STRATUS_PRO_NRF9151 || BOARD_CONEXIO_STRATUS_PRO_NRF9151_NS
+
+config BOOTLOADER_MCUBOOT
+	default y if !MCUBOOT
+
 config BOARD_CONEXIO_STRATUS_PRO
 	select USE_DT_CODE_PARTITION if BOARD_CONEXIO_STRATUS_PRO_NRF9151_NS
 
+endif # BOARD_CONEXIO_STRATUS_PRO_NRF9151 || BOARD_CONEXIO_STRATUS_PRO_NRF9151_NS

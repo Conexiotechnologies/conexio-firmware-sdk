@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Conexio Technologies, Inc
+ * Copyright (c) 2026 Conexio Technologies, Inc
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -133,8 +133,9 @@
 			current-microamp = <800000>;
 			dischg-limit-microamp = <1000000>;
 			vbus-limit-microamp = <1000000>;
-			thermistor-ohms = <10000>;
-			thermistor-beta = <3380>;
+			/* nPM1300 charger — disable NTC */
+			thermistor-ohms = <0>;
+			thermistor-beta = <0>;
 			charging-enable;
 		};
 		regulators {
@@ -152,13 +153,6 @@
 				regulator-boot-on;
 			};
 		};
-	};
-
-	lis2dh: lis2dh@18 {
-		compatible = "st,lis2dh";
-		reg = <0x18>;
-		irq-gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
-		disconnect-sdo-sa0-pull-up;
 	};
 
 	eeprom0: eeprom@50 {
