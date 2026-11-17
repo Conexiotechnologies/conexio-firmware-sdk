@@ -4,6 +4,7 @@
 [![NCS](https://img.shields.io/badge/NCS-v3.4.1-blue?logo=nordicsemiconductor)](https://docs.nordicsemi.com/bundle/ncs-3.4.1/page/nrf/index.html)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
 [![Target](https://img.shields.io/badge/Target-nRF9151-orange)](https://www.nordicsemi.com/Products/nRF9151)
+[![Target](https://img.shields.io/badge/Target-nRF9161-teal)](https://www.nordicsemi.com/Products/nRF9161)
 
 <img src="Design/banner.png" style="margin-bottom:10px" />
 
@@ -11,7 +12,7 @@
 
 Sample applications, board definitions, and developer resources for the
 **Conexio Stratus Pro** — a compact, production-ready cellular IoT development
-kit built on the Nordic nRF9151 SiP.
+kit built on the Nordic nRF9151 & nRF9161 SiP.
 
 **40+ samples** covering RTOS, peripherals, sensors, cellular, cloud, and power management.
 
@@ -142,56 +143,6 @@ See the **[Sample Index](samples/conexio_stratus/SAMPLE_INDEX.md)** for the full
 
 ---
 
-## 🎓 Featured Tutorials
-
-<table>
-    <tr>
-        <td align="center">
-            <img src="Design/nRFConnect.png" width="120"/><br/>
-            <b>Getting Started with nRF Connect for VS Code</b><br/>
-            <a href="https://www.rajeevpiyare.com/posts/nrfconnect-vs-code/">Blog</a> ·
-            <a href="https://www.hackster.io/piyareraj/getting-started-with-nrf-connect-for-visual-studio-code-24c882">Hackster</a> ·
-            <a href="samples/conexio_stratus/led_blink/">Source</a>
-        </td>
-        <td align="center">
-            <img src="Design/datacake.png" width="120"/><br/>
-            <b>Connecting Stratus Pro to Datacake</b><br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-datacake/">Blog</a> ·
-            <a href="https://www.hackster.io/piyareraj/how-to-connect-and-visualize-iot-data-using-datacake-cloud-2f6681">Hackster</a> ·
-            <a href="samples/conexio_stratus/datacake/">Source</a>
-        </td>
-        <td align="center">
-            <img src="Design/golioth.png" width="120"/><br/>
-            <b>Connecting Stratus Pro to Golioth</b><br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-golioth/">Blog</a> ·
-            <a href="https://www.hackster.io/piyareraj/connecting-conexio-stratus-to-golioth-platform-e15cd9">Hackster</a> ·
-            <a href="samples/conexio_stratus/golioth_samples/">Source</a>
-        </td>
-    </tr>
-    <tr>
-        <td align="center">
-            <img src="Design/edge_impulse.png" width="120"/><br/>
-            <b>Machine Learning with Edge Impulse</b><br/>
-            <a href="https://www.rajeevpiyare.com/posts/edge-impulse/">Blog</a> ·
-            <a href="https://www.hackster.io/piyareraj/machine-learning-with-conexio-stratus-and-edge-impulse-25ad20">Hackster</a>
-        </td>
-        <td align="center">
-            <img src="Design/memfault.png" width="120"/><br/>
-            <b>Device Debugging with Memfault</b><br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-to-memfault/">Blog</a> ·
-            <a href="https://www.hackster.io/piyareraj/remote-device-debugging-and-monitoring-using-memfault-093aee">Hackster</a>
-        </td>
-        <td align="center">
-            <img src="Design/getting_started.png" width="120"/><br/>
-            <b>Up and Running with Zephyr RTOS</b><br/>
-            <a href="https://www.rajeevpiyare.com/posts/stratus-getting-started/">Blog</a> ·
-            <a href="https://www.hackster.io/piyareraj/up-and-running-with-zephyrrtos-on-conexio-stratus-iot-kit-4661a3">Hackster</a>
-        </td>
-    </tr>
-</table>
-
----
-
 ## 🗂 Repository Structure
 
 ```
@@ -204,48 +155,6 @@ conexio-firmware-sdk/
 ├── CONTRIBUTING.md               ← guidelines for adding samples
 └── README.md                     ← this file
 ```
-
----
-
-## ✅ Feature Status
-
-| Feature | Status |
-|---------|:------:|
-| 🔌 GPIO / LED / Button | ✅ |
-| 〰️ PWM | ✅ |
-| 📊 ADC / Battery monitoring | ✅ |
-| 🔗 I2C direct API | ✅ |
-| 🔗 SPI direct API | ✅ |
-| 💾 I2C EEPROM (24CW160) | ✅ |
-| 🗄 NVS non-volatile storage | ✅ |
-| 📐 LIS2DH accelerometer | ✅ |
-| 🌡 SHT4x / SHT3x humidity & temperature | ✅ |
-| 🌡 BME280 / BME680 environmental sensor | ✅ |
-| 🌡 DPS310 pressure & temperature | ✅ |
-| 🔋 nPM1300 fuel gauge + SoC bar indicator | ✅ |
-| 💡 nPM1300 LED control | ✅ |
-| 🐕 Watchdog timer | ✅ |
-| ⏰ RTC alarm + wake from system-off | ✅ |
-| 🧵 RTOS threads, work queues, timers | ✅ |
-| 🐚 Shell commands | ✅ |
-| 📋 Logging levels & runtime filtering | ✅ |
-| 📟 AT client | ✅ |
-| 📶 Cellular connectivity test | ✅ |
-| 📶 UDP + PSM / eDRX / RAI | ✅ |
-| ☁️ MQTT publish / subscribe | ✅ |
-| ☁️ Datacake cloud | ✅ |
-| ☁️ Golioth cloud | ✅ |
-| 🛰 GNSS | ✅ |
-| 📡 Wi-Fi scan | ✅ |
-| 💤 Low power mode (~8.9 µA) | ✅ |
-| 🔄 Full modem firmware update | ✅ |
-| 👁 UsefulSensors Person Sensor | ✅ |
-| 🔐 TCP client | ⏳ |
-| 🔐 TLS / HTTPS | ⏳ |
-| 📍 Cellular-based location | ⏳ |
-| 📦 Asset tracking | ⏳ |
-
-> ✅ Ready to use &nbsp;·&nbsp; ⏳ In progress / planned
 
 ---
 
@@ -264,8 +173,7 @@ Companion repositories that extend the Stratus Pro platform with advanced use ca
 
 | | |
 |-|-|
-| 💬 | [GitHub Discussions](https://github.com/Conexiotechnologies/conexio-firmware-sdk/discussions) — questions, ideas, show & tell |
-| 🎮 | [Discord](https://discord.gg/2CZJTrt6Z5) — real-time chat with the community |
+| 💬 | [Forum Discussions](https://community.conexiotech.com/) — questions, ideas, show & tell |
 | 🐛 | [GitHub Issues](https://github.com/Conexiotechnologies/conexio-firmware-sdk/issues) — bug reports and feature requests |
 | 📧 | [info@conexiotech.com](mailto:info@conexiotech.com) — direct contact |
 
@@ -286,3 +194,7 @@ The Apache 2.0 license allows you to freely use, modify, distribute, and sell
 products that include this software. See
 [choosealicense.com/licenses/apache-2.0](https://choosealicense.com/licenses/apache-2.0/)
 for a plain-language summary.
+
+
+---
+*Copyright (c) 2026 Conexio Technologies, Inc. — Apache-2.0 License*
